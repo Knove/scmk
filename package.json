@@ -1,0 +1,24 @@
+{
+  "name": "scmk",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "scmk": "./bin/scmk.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KnoveZ/scmk.git"
+  },
+  "author": "Knove",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KnoveZ/scmk/issues"
+  },
+  "homepage": "https://github.com/KnoveZ/scmk#readme",
+  "dependencies": {
+    "chalk": "^2.4.1"
+  }
+}
