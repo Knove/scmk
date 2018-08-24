@@ -15,7 +15,10 @@ logo();
 console.log(chalk.blue(configData.url));
 switch (script) {
   case "create":
-    create(configData.url, process.argv[3]);
+    create(configData.url, process.argv[3], process.argv[4]);
+    break;
+  case "dir":
+    dir(process.argv[3]);
     break;
   default:
     console.log(`unkown script ${chalk.cyan(script)}.`);

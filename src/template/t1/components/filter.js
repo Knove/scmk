@@ -6,32 +6,63 @@ const $1$Filter = ({
   // model state
   $2$Module,
   mergeData,
+  searchAction,
+  supplierSearchAction,
 }) => {
+  const state = $2$Module;
+  const orgOptions =
+  state.supplierList &&
+  state.supplierList.map(supplier => (
+    <Select.Option value={supplier.id} key={supplier.id}>
+      {supplier.suppName}
+    </Select.Option>
+  ));
   return (
     <div className="components-search">
       <Form layout="inline">
         <Row>
           <Col span={8}>
-            <Form.Item label="供应商">
-              <Select style={{ minWidth: 215 }} filterOption={false} showSearch>
-                <Select.Option value="" key="option">
-                  请选择供应商
-                </Select.Option>
+            <Form.Item label="下拉选择">
+              <Select
+                style={{ minWidth: 215 }}
+                value={state.supplierId}
+                filterOption={false}
+                showSearch
+                onSearch={(value) => {
+                  supplierSearchAction(value);
+                }}
+                onChange={(value) => {
+                  mergeData({ supplierId: value });
+                  searchAction();
+                }}
+              >
+                {orgOptions}
               </Select>
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="单号">
-              <Input style={{ minWidth: 215 }} onChange={() => {}} placeholder="请输入单据编号" />
+            <Form.Item label="输入框">
+              <Input
+                style={{ minWidth: 215 }}
+                value={state.inputValue}
+                onChange={(event) => {
+                  mergeData({ inputValue: event.target.value });
+                }}
+                placeholder="请输入..."
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="操作日期">
+            <Form.Item label="日期选择">
               <DatePicker.RangePicker
                 style={{ minWidth: 215 }}
                 allowClear={false}
                 format="YYYY-MM-DD"
-                onChange={() => {}}
+                onChange={(value) => {
+                  mergeData({ datePicker: value });
+                  searchAction();
+                }}
+                value={state.datePicker}
                 renderExtraFooter={() => <div style={{ textAlign: 'center', color: '#bfbfbf' }}>请点选两个时间以确定一个时间范围</div>}
                 ranges={{
                   前1月: [moment().subtract(1, 'month'), moment()],
@@ -47,7 +78,13 @@ const $1$Filter = ({
         <Row>
           <Col span={16}>
             <Form.Item label="状态">
-              <Radio.Group onChange={() => {}} value="" >
+              <Radio.Group
+                onChange={(event) => {
+                  mergeData({ status: event.target.value });
+                  searchAction();
+                }}
+                value={state.status}
+              >
                 <Radio.Button value="962">已审核</Radio.Button>
                 <Radio.Button value="961">待审核</Radio.Button>
                 <Radio.Button value="960">已作废</Radio.Button>
@@ -57,7 +94,7 @@ const $1$Filter = ({
           </Col>
           <Col span={8}>
             <Form.Item>
-              <Button type="primary" onClick={() => {}}>
+              <Button type="primary" onClick={() => searchAction()}>
                 搜索
               </Button>
             </Form.Item>
@@ -65,8 +102,8 @@ const $1$Filter = ({
         </Row>
       </Form>
       <div className="float-top">
-        <Button type="primary" size="large" onClick={() => {}}>
-          添加单据
+        <Button size="large" onClick={() => {}}>
+          右上角功能框
         </Button>
       </div>
     </div>

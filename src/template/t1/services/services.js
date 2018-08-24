@@ -6,3 +6,9 @@ export async function fetchList(params) {
     body: JSON.stringify(params),
   });
 }
+export async function fetchTable(params) {
+  return request('/ipos-chains/scmzb/directSupplierPrice/findDataForPage', {
+    method: 'post',
+    body: JSON.stringify(params),
+  });
+}

@@ -1,13 +1,15 @@
 const chalk = require("chalk");
 const fs = require("fs");
 const path = require("path");
+const { insertFlg } = require("./tools/string");
 
 // global
 let projectName = "";
 let modelName = "";
 let projectUrl = "";
+let menuName = "";
 
-async function create(url, name) {
+function create(url, name, reName) {
   if (!name) {
     console.log(
       chalk.red(
@@ -25,6 +27,7 @@ async function create(url, name) {
     return null;
   }
   // data ready
+  menuName = reName;
   projectName =
     name.substring(0, 1).toUpperCase() + name.substring(1, name.length);
   modelName =
@@ -34,6 +37,8 @@ async function create(url, name) {
 
   // start
   fileDisplay(filePath);
+  // add config (router add / model register/ menu info add)
+  configAdd();
 }
 function fileDisplay(filePath) {
   fs.readdir(filePath, function(err, files) {
@@ -78,11 +83,26 @@ function fileDisplay(filePath) {
                 case "models.js":
                   path =
                     projectUrl +
-                    "\\src\\components\\Inventory\\" +
+                    "\\src\\models\\inventory\\" +
+                    modelName +
+                    ".js";
+                  dir = projectUrl + "\\src\\models\\inventory";
+                  break;
+                case "routes.js":
+                  path =
+                    projectUrl +
+                    "\\src\\routes\\inventory\\" +
                     projectName +
-                    "\\table.jsx";
-                  dir =
-                    projectUrl + "\\src\\components\\Inventory\\" + projectName;
+                    ".jsx";
+                  dir = projectUrl + "\\src\\routes\\inventory";
+                  break;
+                case "services.js":
+                  path =
+                    projectUrl +
+                    "\\src\\services\\inventory\\" +
+                    modelName +
+                    ".js";
+                  dir = projectUrl + "\\src\\services\\inventory";
                   break;
                 default:
                   break;
@@ -93,13 +113,8 @@ function fileDisplay(filePath) {
                   console.log(chalk.green("SCMK SUCCESS => 成功写入" + path));
                 } else
                   fs.mkdir(dir, function(err) {
-                    if (err) console.error(err);
-                    else {
-                      fs.writeFileSync(path, JsFileData);
-                      console.log(
-                        chalk.green("SCMK SUCCESS => 成功写入" + path)
-                      );
-                    }
+                    fs.writeFileSync(path, JsFileData);
+                    console.log(chalk.green("SCMK SUCCESS => 成功写入" + path));
                   });
               });
             }
@@ -111,6 +126,32 @@ function fileDisplay(filePath) {
       });
     }
   });
+}
+function configAdd() {
+  // data ready
+  const MODEL_LOGO = "//  --- SCMK  ---";
+  const MODEL_ANCHOR = "app.use(createLoading());";
+
+  const modelRegistPage = fs
+    .readFileSync(projectUrl + "\\src\\entry\\inventory.js")
+    .toString();
+  const insertModel = `app.model(require('../models/inventory/${modelName}'));\n`;
+
+
+  const sn = modelRegistPage.indexOf(MODEL_ANCHOR);
+  if (sn >= 0) {
+    const logoFlag = modelRegistPage.indexOf(MODEL_LOGO);
+    if (logoFlag < 0)
+      fs.writeFileSync(
+        projectUrl + "\\src\\entry\\inventory.js",
+        insertFlg(modelRegistPage, insertModel, sn + 26)
+      );
+  } else
+    console.log(
+      chalk.red(
+        "SCMK ERROR : entry\\inventory.js 文件不合法，没有找到锚点，无法注册model！"
+      )
+    );
 }
 
 exports = module.exports = create;
