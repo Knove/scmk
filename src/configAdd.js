@@ -16,12 +16,13 @@ function configAdd(projectUrl, projectName, modelName) {
   const anchorSn = modelRegistPage.indexOf(MODEL_ANCHOR);
   if (anchorSn >= 0) {
     const logoFlag = modelRegistPage.indexOf(MODEL_LOGO);
-    const insertContext = insertFlg(
-      modelRegistPage,
-      MODEL_LOGO + "\n",
-      anchorSn + 26
-    );
+    let insertContext = modelRegistPage;
     if (logoFlag < 0) {
+      insertContext = insertFlg(
+        modelRegistPage,
+        MODEL_LOGO + "\n",
+        anchorSn + 26
+      );
       fs.writeFileSync(
         projectUrl + "\\src\\entry\\inventory.js",
         insertContext
@@ -31,7 +32,7 @@ function configAdd(projectUrl, projectName, modelName) {
     if (logoSn >= 0) {
       fs.writeFileSync(
         projectUrl + "\\src\\entry\\inventory.js",
-        insertFlg(insertContext, insertModel, logoSn + 19)
+        insertFlg(insertContext, insertModel, logoSn + 18)
       );
       console.log(chalk.green("SCMK SUCCESS => 成功注册model"));
     } else
