@@ -2,7 +2,6 @@ const chalk = require("chalk");
 const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
-const { insertFlg } = require("./tools/string");
 const configAdd = require("./configAdd");
 
 // global
@@ -26,7 +25,7 @@ function create(url, name, reName) {
       if (!name) {
         console.log(
           chalk.red(
-            "SCMK ERROR : 请填入项目名称。 语法： scmk create < 项目名称 >。 例如 : scmk create helloWorld"
+            "SCMK ERROR : 请填入项目名称。 语法： scmk create < 项目名称 > <项目菜单名>。 例如 : scmk create helloWorld 你好世界"
           )
         );
         return null;
@@ -34,7 +33,7 @@ function create(url, name, reName) {
       if (!url) {
         console.log(
           chalk.red(
-            "SCMK ERROR : 请配置好项目目录。 语法： scmk set < 项目目录 >。 例如 : scmk set D:\\choice\\merchants"
+            "SCMK ERROR : 请配置好项目目录。 语法： scmk dir < 项目目录 >。 例如 : scmk dir D:\\choice\\merchants"
           )
         );
         return null;
