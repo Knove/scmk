@@ -1,7 +1,9 @@
 const chalk = require("chalk");
 const fs = require("fs");
 const path = require("path");
+const readline = require("readline");
 const { insertFlg } = require("./tools/string");
+const configAdd = require("./configAdd");
 
 // global
 let projectName = "";
@@ -10,35 +12,55 @@ let projectUrl = "";
 let menuName = "";
 
 function create(url, name, reName) {
-  if (!name) {
-    console.log(
-      chalk.red(
-        "SCMK ERROR : 请填入项目名称。 语法： scmk create < 项目名称 >。 例如 : scmk create helloWorld"
-      )
-    );
-    return null;
-  }
-  if (!url) {
-    console.log(
-      chalk.red(
-        "SCMK ERROR : 请配置好项目目录。 语法： scmk set < 项目目录 >。 例如 : scmk set D:\\choice\\merchants"
-      )
-    );
-    return null;
-  }
-  // data ready
-  menuName = reName;
-  projectName =
-    name.substring(0, 1).toUpperCase() + name.substring(1, name.length);
-  modelName =
-    name.substring(0, 1).toLowerCase() + name.substring(1, name.length);
-  projectUrl = url;
-  const filePath = path.join(__dirname, "./template/t1/");
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  const question = `请确认你要创建的模块信息(输入N可以退出)：\n模块名：${chalk.bgMagenta(
+    name
+  )}\n要创建哪一套模块？直接输入数字继续\n0.纯净模块\n1.标准外页模块\n2.完整模块\n3.左侧菜单模块\n`;
+  const menuData = ["0", "1", "2", "3"];
+  rl.question(chalk.whiteBright(question), function(answer) {
+    if (answer === "N" || answer === "n") console.log("Bye!");
+    else if (menuData.indexOf(answer) >= 0) {
+      if (!name) {
+        console.log(
+          chalk.red(
+            "SCMK ERROR : 请填入项目名称。 语法： scmk create < 项目名称 >。 例如 : scmk create helloWorld"
+          )
+        );
+        return null;
+      }
+      if (!url) {
+        console.log(
+          chalk.red(
+            "SCMK ERROR : 请配置好项目目录。 语法： scmk set < 项目目录 >。 例如 : scmk set D:\\choice\\merchants"
+          )
+        );
+        return null;
+      }
+      // data ready
+      menuName = reName;
+      projectName =
+        name.substring(0, 1).toUpperCase() + name.substring(1, name.length);
+      modelName =
+        name.substring(0, 1).toLowerCase() + name.substring(1, name.length);
+      projectUrl = url;
+      const filePath = path.join(__dirname, "./template/t" + answer + "/");
 
-  // start
-  fileDisplay(filePath);
-  // add config (router add / model register/ menu info add)
-  configAdd();
+      // start
+      fileDisplay(filePath);
+      // add config (router add / model register/ menu info add)
+      configAdd(projectUrl, projectName, modelName);
+    } else {
+      console.log(
+        chalk.red(
+          "SCMK ERROR : 请输入正确的模块类型！"
+        )
+      );
+    }
+    rl.close();
+  });
 }
 function fileDisplay(filePath) {
   fs.readdir(filePath, function(err, files) {
@@ -126,32 +148,6 @@ function fileDisplay(filePath) {
       });
     }
   });
-}
-function configAdd() {
-  // data ready
-  const MODEL_LOGO = "//  --- SCMK  ---";
-  const MODEL_ANCHOR = "app.use(createLoading());";
-
-  const modelRegistPage = fs
-    .readFileSync(projectUrl + "\\src\\entry\\inventory.js")
-    .toString();
-  const insertModel = `app.model(require('../models/inventory/${modelName}'));\n`;
-
-
-  const sn = modelRegistPage.indexOf(MODEL_ANCHOR);
-  if (sn >= 0) {
-    const logoFlag = modelRegistPage.indexOf(MODEL_LOGO);
-    if (logoFlag < 0)
-      fs.writeFileSync(
-        projectUrl + "\\src\\entry\\inventory.js",
-        insertFlg(modelRegistPage, insertModel, sn + 26)
-      );
-  } else
-    console.log(
-      chalk.red(
-        "SCMK ERROR : entry\\inventory.js 文件不合法，没有找到锚点，无法注册model！"
-      )
-    );
 }
 
 exports = module.exports = create;
