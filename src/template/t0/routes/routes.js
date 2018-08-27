@@ -9,15 +9,15 @@ const $1$ = ({ $2$Module, dispatch }) => {
     mergeData(payload) {
       dispatch({
         type: '$2$Module/mergeData',
-        payload
+        payload,
       });
     },
     searchAction() {
       dispatch({
         type: '$2$Module/getList',
-        payload: {}
+        payload: {},
       });
-    }
+    },
   };
 
   const $2$TableData = {
@@ -27,10 +27,10 @@ const $1$ = ({ $2$Module, dispatch }) => {
         type: '$2$Module/getList',
         payload: {
           pageNo: page.current,
-          pageSize: page.pageSize
-        }
+          pageSize: page.pageSize,
+        },
       });
-    }
+    },
   };
 
   return (
