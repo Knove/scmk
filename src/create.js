@@ -51,7 +51,7 @@ function create(url, name, reName) {
       // start
       fileDisplay(filePath);
       // add config (router add / model register/ menu info add)
-      configAdd(projectUrl, projectName, modelName);
+      configAdd(projectUrl, projectName, modelName, menuName);
     } else {
       console.log(
         chalk.red(
