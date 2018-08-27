@@ -62,25 +62,37 @@ function configAdd(projectUrl, projectName, modelName, menuName) {
   */
   const menuDataPage = fs.readFileSync(menuDataUrl).toString();
   const insertMenu = `        { key: '/stock/${modelName}', name: '${menuName}', search: '' },`;
-  const menuAnchor = menuDataPage.indexOf(MENU_ANCHOR);
-  if (menuAnchor >= 0) {
-    fs.writeFileSync(
-      menuDataUrl,
-      insertFlg(menuDataPage, "\n" + insertMenu, menuAnchor + 9)
-    );
-    console.log(chalk.green("SCMK SUCCESS => 成功写入menuData.js增加左侧菜单"));
-  } else
+  const runMenuFlag = menuDataPage.indexOf(insertMenu);
+  if (runMenuFlag < 0) {
+    const menuAnchor = menuDataPage.indexOf(MENU_ANCHOR);
+    if (menuAnchor >= 0) {
+      fs.writeFileSync(
+        menuDataUrl,
+        insertFlg(menuDataPage, "\n" + insertMenu, menuAnchor + 9)
+      );
+      console.log(
+        chalk.green("SCMK SUCCESS => 成功写入menuData.js增加左侧菜单")
+      );
+    } else
+      console.log(
+        chalk.red(
+          "SCMK ERROR : menuData.js 文件不合法，没有找到锚点，无法增加左侧菜单！"
+        )
+      );
+  } else {
     console.log(
-      chalk.red(
-        "SCMK ERROR : menuData.js 文件不合法，没有找到锚点，无法增加左侧菜单！"
-      )
+      chalk.blue(`SCMK INFO : 检测到模块${modelName}的左侧菜单已经添加。`)
     );
+  }
+
   /*
     router regist
   */
   const routeIndexPage = fs.readFileSync(routeIndexUrl).toString();
-  const routeAnchor = routeIndexPage.indexOf(ROUTE_ANCHOR);
-  const insertRoute = `
+  const runRouterFlag = menuDataPage.indexOf(insertMenu);
+  if (runRouterFlag < 0) {
+    const routeAnchor = routeIndexPage.indexOf(ROUTE_ANCHOR);
+    const insertRoute = `
   {
     path: '/stock/${modelName}',
     getComponent(nextState, cb) {
@@ -93,22 +105,27 @@ function configAdd(projectUrl, projectName, modelName, menuName) {
       );
     },
   },`;
-  if (routeAnchor >= 0) {
-    fs.writeFileSync(
-      routeIndexUrl,
-      insertFlg(routeIndexPage, insertRoute, routeAnchor + 16)
-    );
+    if (routeAnchor >= 0) {
+      fs.writeFileSync(
+        routeIndexUrl,
+        insertFlg(routeIndexPage, insertRoute, routeAnchor + 16)
+      );
+      console.log(
+        chalk.green(
+          "SCMK SUCCESS => 成功写入routes/inventory/index.jsx增加路由监听"
+        )
+      );
+    } else
+      console.log(
+        chalk.red(
+          "SCMK ERROR : routes/inventory/index.jsx 文件不合法，没有找到锚点，无法增加路由监听！"
+        )
+      );
+  } else {
     console.log(
-      chalk.green(
-        "SCMK SUCCESS => 成功写入routes/inventory/index.jsx增加路由监听"
-      )
+      chalk.blue(`SCMK INFO : 检测到模块${modelName}的路由监听已经添加。`)
     );
-  } else
-    console.log(
-      chalk.red(
-        "SCMK ERROR : routes/inventory/index.jsx 文件不合法，没有找到锚点，无法增加路由监听！"
-      )
-    );
+  }
 }
 
 exports = module.exports = configAdd;
