@@ -23,8 +23,10 @@
     "no-console": 0,
     "react/no-multi-comp": 0,
     "react/prop-types": 0,
+    "react/jsx-filename-extension": 0,
+    "import/extensions": 0,
+    "import/no-unresolved": 0,
     "no-use-before-define": 0,
-    "import/no-unresolved": [2, { "commonjs": true }],
     "import/no-duplicates": 2,
     "complexity": [2, 25], // 算法复杂度到25
     "max-depth": [2, 9],
