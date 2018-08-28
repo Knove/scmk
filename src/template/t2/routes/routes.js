@@ -26,10 +26,26 @@ const $1$ = ({ $2$Module, dispatch }) => {
         },
       });
     },
+    routerGo(path) {
+      dispatch({
+        type: '$2$Module/routerGo',
+        payload: {
+          path,
+        },
+      });
+    },
   };
 
   const $2$TableData = {
     $2$Module,
+    routerGo(path) {
+      dispatch({
+        type: '$2$Module/routerGo',
+        payload: {
+          path,
+        },
+      });
+    },
     mergeData(payload) {
       dispatch({
         type: '$2$Module/mergeData',

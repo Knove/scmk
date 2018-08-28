@@ -7,16 +7,17 @@ const $1$Filter = ({
   $2$Module,
   mergeData,
   searchAction,
+  routerGo,
   supplierSearchAction,
 }) => {
   const state = $2$Module;
   const orgOptions =
-  state.supplierList &&
-  state.supplierList.map(supplier => (
-    <Select.Option value={supplier.id} key={supplier.id}>
-      {supplier.suppName}
-    </Select.Option>
-  ));
+    state.supplierList &&
+    state.supplierList.map(supplier => (
+      <Select.Option value={supplier.id} key={supplier.id}>
+        {supplier.suppName}
+      </Select.Option>
+    ));
   return (
     <div className="components-search">
       <Form layout="inline">
@@ -102,8 +103,12 @@ const $1$Filter = ({
         </Row>
       </Form>
       <div className="float-top">
-        <Button size="large" onClick={() => {}}>
-          右上角功能框
+        <Button
+          onClick={() => {
+            routerGo('/stock/$2$/details/add/0/0');
+          }}
+        >
+          新增
         </Button>
       </div>
     </div>

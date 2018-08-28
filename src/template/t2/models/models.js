@@ -1,6 +1,7 @@
 import { parse } from 'qs';
 import { message } from 'antd';
 import moment from 'moment';
+import { routerRedux } from 'dva/router';
 import { querySupplier } from '../../services/inventory/common';
 import { fetchList } from '../../services/inventory/$2$';
 
@@ -101,6 +102,11 @@ export default {
         message.warning(`操作失败，请参考：${supplierData.data.errorInfo}`);
       }
       yield put({ type: 'hideLoading' });
+    },
+    // 跳转控制
+    * routerGo({ payload }, { put }) {
+      const path = payload.path;
+      yield put(routerRedux.push(path));
     },
   },
   subscriptions: {

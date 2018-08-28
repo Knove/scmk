@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'dva';
-import { message, Modal } from 'antd';
 import DetailsFilter from '../../components/Inventory/$1$/details/info';
 import DetailListView from '../../components/Inventory/$1$/details/listView';
 
-const $1$Details = ({ $2$Module, dispatch }) => {
+const $1$Details = ({ $2$DetailModule, dispatch }) => {
   const DetailsFilterData = {
-    $2$Module,
+    $2$DetailModule,
     mergeData(payload) {
       dispatch({
         type: '$2$DetailModule/mergeData',
@@ -15,78 +14,36 @@ const $1$Details = ({ $2$Module, dispatch }) => {
     },
   };
   const DetailsListData = {
-    opType,
-    pageStatus,
-    detailList,
-    pageDetail,
-    editableMem,
-    goodsList,
-    savingStatus,
-    bussDate,
-    goodsPopListModel,
-    popupListPagination,
-    foundTreeList,
-    popupListLoading,
-    dataSourceIndex,
-    loadingList,
-    billStatus,
-    confilictionRows,
-    selectedTableRows,
-    currBatchRange,
-    showFinalConfim,
-    isLoadingPage,
-    selectedSupplier,
-    cateId,
-    shouldGoForward: () => {
-      // busiId || !storeAddId || !busiId
-      if (!(selectedSupplier && selectedSupplier.id)) {
-        message.error('请选择供应商后继续！');
-        return false;
-      }
-      return null;
-    },
-    switchFinalConfirm: () => {
+    $2$DetailModule,
+    mergeData(payload) {
       dispatch({
-        type: 'costsListDetailsModule/changeFinalConfirm',
+        type: '$2$DetailModule/mergeData',
+        payload,
       });
     },
-    setCurrBatchRange: (batchRange) => {
+    sureModalHandle: (type) => {
       dispatch({
-        type: 'costsListDetailsModule/saveCurrBatchRange',
-        payload: { batchRange },
+        type: '$2$DetailModule/updateSureModal',
+        payload: type,
       });
     },
-    batchSaveRange: (range) => {
+    complexModalHandle: (type) => {
       dispatch({
-        type: 'costsListDetailsModule/saveRangeInBatch',
-        payload: {},
-      });
-      // dispatch({
-      //   type: 'costsListDetailsModule/saveSelectedTableRows',
-      //   payload: {
-      //     rows: [],
-      //   },
-      // });
-    },
-    setSelectedTableRows: (rows) => {
-      dispatch({
-        type: 'costsListDetailsModule/saveSelectedTableRows',
-        payload: {
-          rows,
-        },
+        type: '$2$DetailModule/updateComplexModal',
+        payload: type,
       });
     },
     switchType: (type) => {
       dispatch({
-        type: 'costsListDetailsModule/startWithType',
+        type: '$2$DetailModule/startWithType',
         payload: {
-          opType: type,
+          pageType: type,
         },
       });
     },
     resyncDataSource: (listData) => {
       dispatch({
-        type: 'costsListDetailsModule/resyncListData',
+        type: '$2$DetailModule/resyncListData',
         payload: {
           listData,
         },
@@ -94,7 +51,7 @@ const $1$Details = ({ $2$Module, dispatch }) => {
     },
     syncMem: (fieldName) => {
       dispatch({
-        type: 'costsListDetailsModule/syncMemFields',
+        type: '$2$DetailModule/syncMemFields',
         payload: {
           fieldName,
         },
@@ -102,158 +59,127 @@ const $1$Details = ({ $2$Module, dispatch }) => {
     },
     getGoodsListByTyping: (queryString) => {
       dispatch({
-        type: 'costsListDetailsModule/queryGoodsCoding',
-        payload: { limit: 20, status: 1, storeId, queryString },
+        type: '$2$DetailModule/queryGoodsCoding',
+        payload: {
+          pageSize: 10,
+          pageNo: 1,
+          queryString,
+        },
       });
     },
     syncSeletedItemIntoRow: (selectedObjs, index, fieldName, isModal) => {
       dispatch({
-        type: 'costsListDetailsModule/syncSeletedItemIntoList',
+        type: '$2$DetailModule/syncSeletedItemIntoList',
         payload: { selectedObjs, index, fieldName, isModal },
       });
-      // dispatch({
-      //   type: 'costsListDetailsModule/toNextMemByCurr',
-      //   payload: { index, fieldName },
-      // });
     },
     toNextMem: (rowIndex, fieldName, isShow) => {
       dispatch({
-        type: 'costsListDetailsModule/toNextMemByCurr',
+        type: '$2$DetailModule/toNextMemByCurr',
         payload: { rowIndex, fieldName, isShow },
       });
     },
     toggleMemStatus: (rowIndex, fieldName) => {
       dispatch({
-        type: 'costsListDetailsModule/toggleMemStatus',
+        type: '$2$DetailModule/toggleMemStatus',
         payload: { rowIndex, fieldName },
       });
     },
     updateEditableMem(targetField, index) {
-      // console.log('targetField in updateEditableMem', targetField,index+1);
       dispatch({
-        type: 'costsListDetailsModule/updateEditableMem',
+        type: '$2$DetailModule/updateEditableMem',
         payload: { targetField, index },
       });
     },
     insertNewRowAfterIndex: (index) => {
       dispatch({
-        type: 'costsListDetailsModule/insertNewListItemAfterIndex',
+        type: '$2$DetailModule/insertNewListItemAfterIndex',
         payload: { index },
       });
     },
     removeRowAtIndex: (index) => {
       dispatch({
-        type: 'costsListDetailsModule/removeListItemAtIndex',
+        type: '$2$DetailModule/removeListItemAtIndex',
         payload: { index },
       });
     },
     saveDetails: (status) => {
       dispatch({
-        type: 'costsListDetailsModule/saveCostsListDetails',
+        type: '$2$DetailModule/saveRequisitionDetails',
         payload: { status },
       });
     },
     cancelDetailPage: () => {
       dispatch({
-        type: 'costsListDetailsModule/cancelDetailData',
+        type: '$2$DetailModule/cancelDetailData',
         payload: {},
       });
+
       dispatch({
-        type: 'costsListModule/getList', // getOrderLibByFilter
-        payload: {},
-      });
-      dispatch({
-        type: 'costsListDetailsModule/querySuccess',
+        type: '$2$DetailModule/querySuccess',
         payload: {
-          dataSourceIndex: [],
-          // pageDetail: [],
+          findList: [],
         },
       });
     },
     switchEditingStatus: (rowIndex, fieldName, status) => {
       dispatch({
-        type: 'costsListDetailsModule/changeEditingStatus',
+        type: '$2$DetailModule/changeEditingStatus',
         payload: { rowIndex, fieldName, status },
       });
     },
-    openGoodsModel: (value) => {
+    updateRedFlag: (redFlag, row, type) => {
       dispatch({
-        type: 'costsListDetailsModule/openGoodsModel',
+        type: '$2$DetailModule/updateRedFlag',
         payload: {
-          goodsVisible: true,
-          modalRowIndex: value,
+          flag: redFlag,
+          rowIndex: row,
+          types: type,
         },
       });
     },
-
-    getGoodsListdata: (value) => {
+    updateReadyOutDataArraynow(value) {
       dispatch({
-        type: 'costsListDetailsModule/getPopListData',
+        type: '$2$DetailModule/updateReadyOutDataArraynow',
+        payload: value,
+      });
+    },
+    updateComplexDataArraynow(value) {
+      dispatch({
+        type: '$2$DetailModule/updateComplexDataArraynow',
+        payload: value,
+      });
+    },
+    getGoodsListdata: () => {
+      dispatch({
+        type: '$2$DetailModule/getPopListData',
         payload: {},
       });
       dispatch({
-        type: 'costsListDetailsModule/searchTreeList',
-        payload: { type: 0 }, // 0,1
-      });
-      // dispatch({
-      //   type: 'costsListDetailsModule/mapPopListDataToModel',
-      //   payload: {
-      //   },
-      // });
-    },
-    resetGoodsListdata: (value) => {
-      dispatch({
-        type: 'costsListDetailsModule/resetGoodsListdata',
-        payload: {},
-      });
-    },
-
-    onPopupPageChange: (page) => {
-      dispatch({
-        type: 'costsListDetailsModule/getPopListData',
-        payload: {
-          cateId,
-          pageNo: page.current,
-          pageSize: page.pageSize,
-        },
-      });
-    },
-    onPopupPageSizeChange: (current, pageSize) => {
-      dispatch({
-        type: 'costsListDetailsModule/getPopListData',
-        payload: {
-          cateId,
-          pageNo: 1,
-          pageSize,
-        },
+        type: '$2$DetailModule/searchTreeList',
+        payload: { type: 0 },
       });
     },
     onSelectedTreeItem(selectedKeys) {
       // 根据类别跳转
-      // if (selectedKeys[0]) {
-      console.log('selectedKeys', selectedKeys);
       dispatch({
-        type: 'costsListDetailsModule/getPopListData',
+        type: '$2$DetailModule/getPopListData',
         payload: {
-          cateId: selectedKeys[0] ? selectedKeys[0] : '',
-          // storeId,
-          // limit: '20',
-          //
+          cateId: selectedKeys[0],
           pageSize: 10,
           pageNo: 1,
         },
       });
-      // dispatch({
-      //   type: 'costsListDetailsModule/saveCateId',
-      //   payload: {
-      //     cateId: selectedKeys[0],
-      //   },
-      // });
-      // }
+      dispatch({
+        type: '$2$DetailModule/saveCateId',
+        payload: {
+          cateId: selectedKeys[0],
+        },
+      });
     },
     selectModalSearch: (value) => {
       dispatch({
-        type: 'costsListDetailsModule/getPopListData',
+        type: '$2$DetailModule/getPopListData',
         payload: {
           pageNo: 1,
           pageSize: 10,
@@ -263,7 +189,7 @@ const $1$Details = ({ $2$Module, dispatch }) => {
     },
     onCloseModel: () => {
       dispatch({
-        type: 'costsListDetailsModule/querySuccess',
+        type: '$2$DetailModule/mergeData',
         payload: {
           cateId: '',
           queryModalString: '',
@@ -274,17 +200,23 @@ const $1$Details = ({ $2$Module, dispatch }) => {
         },
       });
     },
-    confirmConfiliction: () => {
+    onPopupPageChange: (page) => {
       dispatch({
-        type: 'costsListDetailsModule/confirmConfilictionRows',
-        payload: {},
+        type: '$2$DetailModule/getPopListData',
+        payload: {
+          cateId: $2$DetailModule.cateId,
+          pageNo: page.current,
+          pageSize: page.pageSize,
+        },
       });
     },
-    deleteAGoods: (item) => {
+    onPopupPageSizeChange: (current, pageSize) => {
       dispatch({
-        type: 'costsListDetailsModule/deleteAGoodsItem',
+        type: '$2$DetailModule/getPopListData',
         payload: {
-          item,
+          cateId: $2$DetailModule.cateId,
+          pageNo: 1,
+          pageSize,
         },
       });
     },
@@ -298,7 +230,7 @@ const $1$Details = ({ $2$Module, dispatch }) => {
   );
 };
 
-function mapStateToProps({ costsListDetailsModule }) {
-  return { costsListDetailsModule };
+function mapStateToProps({ $2$DetailModule }) {
+  return { $2$DetailModule };
 }
 export default connect(mapStateToProps)($1$Details);

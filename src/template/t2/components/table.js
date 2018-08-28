@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Badge, Form } from 'antd';
 
-function $1$Table({ $2$Module, onPageChange, mergeData }) {
+function $1$Table({ $2$Module, onPageChange, mergeData, routerGo }) {
   const state = $2$Module;
   const columns = [
     {
@@ -24,7 +24,25 @@ function $1$Table({ $2$Module, onPageChange, mergeData }) {
       title: '操作',
       dataIndex: 'operations',
       key: 'operations',
-      render: () => <a>查看</a>,
+      render: (text, record) => (
+        <span>
+          <a
+            onClick={() => {
+              routerGo(`/stock/$2$/detail/view/0/${record.id}`);
+            }}
+          >
+            查看
+          </a>
+          <span className="ant-divider" />
+          <a
+            onClick={() => {
+              routerGo(`/stock/$2$/detail/edit/0/${record.id}`);
+            }}
+          >
+            编辑
+          </a>
+        </span>
+      ),
     },
   ];
   const rowSelection = {

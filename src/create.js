@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const configAdd = require('./configAdd');
+const mkdirp = require('mkdirp');
 
 // global
 let projectName = '';
@@ -36,7 +37,6 @@ function create(url, name, reName) {
       modelName = name.substring(0, 1).toLowerCase() + name.substring(1, name.length);
       projectUrl = url;
       const filePath = path.join(__dirname, `./template/t${answer}/`);
-
       // start
       fileDisplay(filePath);
       // add config (router add / model register/ menu info add)
@@ -87,6 +87,26 @@ function fileDisplay(filePath) {
                   wpath = `${projectUrl}\\src\\services\\inventory\\${modelName}.js`;
                   dir = `${projectUrl}\\src\\services\\inventory`;
                   break;
+                case 'info.js':
+                  wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\details\\info.jsx`;
+                  dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\details`;
+                  break;
+                case 'listView.js':
+                  wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\details\\listView.jsx`;
+                  dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\details`;
+                  break;
+                case 'modelsDetails.js':
+                  wpath = `${projectUrl}\\src\\models\\inventory\\${modelName}Details.js`;
+                  dir = `${projectUrl}\\src\\models\\inventory`;
+                  break;
+                case 'servicesDetails.js':
+                  wpath = `${projectUrl}\\src\\services\\inventory\\${modelName}Details.js`;
+                  dir = `${projectUrl}\\src\\services\\inventory`;
+                  break;
+                case 'routesDetails.js':
+                  wpath = `${projectUrl}\\src\\routes\\inventory\\${projectName}Details.jsx`;
+                  dir = `${projectUrl}\\src\\routes\\inventory`;
+                  break;
                 default:
                   break;
               }
@@ -95,7 +115,7 @@ function fileDisplay(filePath) {
                   fs.writeFileSync(wpath, JsFileData);
                   console.log(chalk.green(`SCMK SUCCESS => 成功写入${wpath}`));
                 } else {
-                  fs.mkdir(dir, () => {
+                  mkdirp(dir, () => {
                     fs.writeFileSync(wpath, JsFileData);
                     console.log(chalk.green(`SCMK SUCCESS => 成功写入${wpath}`));
                   });
