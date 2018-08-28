@@ -1,12 +1,10 @@
 import React from 'react';
-import { Form, Select, Checkbox, Input, message, Modal } from 'antd';
-import _ from 'lodash';
 import { DetailTable } from '../../_components/hermes-react/components/index.jsx';
 
 const CostsListDetailsFilter = ({
-  opType,
-  billInfo,
+  $2$Module,
 }) => {
+  const state = $2$Module;
   const detailConfig = [
     {
       label: '定价单号',

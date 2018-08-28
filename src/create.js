@@ -93,11 +93,11 @@ function fileDisplay(filePath) {
               fs.exists(dir, (exists) => {
                 if (exists) {
                   fs.writeFileSync(wpath, JsFileData);
-                  console.log(chalk.green(`SCMK SUCCESS => 成功写入${path}`));
+                  console.log(chalk.green(`SCMK SUCCESS => 成功写入${wpath}`));
                 } else {
                   fs.mkdir(dir, () => {
                     fs.writeFileSync(wpath, JsFileData);
-                    console.log(chalk.green(`SCMK SUCCESS => 成功写入${path}`));
+                    console.log(chalk.green(`SCMK SUCCESS => 成功写入${wpath}`));
                   });
                 }
               });

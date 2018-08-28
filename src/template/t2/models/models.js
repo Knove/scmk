@@ -112,12 +112,12 @@ export default {
             type: 'merchantApp/changePageRouter',
             pageRouterName: [''], // 数组项目会在面包屑中展开
           });
-            // 初始化请求表格
+          // 初始化请求表格
           dispatch({
             type: 'getList',
             payload: { page: 1, rows: 10 },
           });
-            // 初始化请求下拉框内容
+          // 初始化请求下拉框内容
           dispatch({
             type: 'querySupplier',
             payload: { rows: 100000, orgType: 1 }, // orgType:1 门店 2:总部

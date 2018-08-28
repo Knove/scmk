@@ -25,7 +25,7 @@ const $1$ = ({ $2$Module, dispatch }) => {
           queryString: value,
         },
       });
-    }
+    },
   };
 
   const $2$TableData = {
@@ -42,15 +42,6 @@ const $1$ = ({ $2$Module, dispatch }) => {
         payload: {
           pageNo: page.current,
           pageSize: page.pageSize,
-        },
-      });
-    },
-    onPageSizeChange(current, pageSize) {
-      dispatch({
-        type: '$2$Module/getList',
-        payload: {
-          pageNo: 1,
-          pageSize,
         },
       });
     },

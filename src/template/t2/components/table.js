@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Badge, Form } from 'antd';
 
-function $1$Table({ $2$Module, onPageChange, onPageSizeChange, mergeData }) {
+function $1$Table({ $2$Module, onPageChange, mergeData }) {
   const state = $2$Module;
   const columns = [
     {
@@ -40,7 +40,6 @@ function $1$Table({ $2$Module, onPageChange, onPageSizeChange, mergeData }) {
         dataSource={state.listData}
         loading={state.loading}
         onChange={onPageChange}
-        onShowSizeChange={onPageSizeChange}
         pagination={state.pagination}
         rowKey={record => record.id}
         rowSelection={rowSelection}
