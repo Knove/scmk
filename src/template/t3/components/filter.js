@@ -112,7 +112,7 @@ const $1$Filter = ({
                 style={{ minWidth: 215 }}
                 value={state.objectId}
                 onChange={(value) => {
-                  mergeData({ supplierId: value });
+                  mergeData({ objectId: value });
                   searchAction();
                 }}
               >

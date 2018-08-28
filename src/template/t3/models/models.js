@@ -8,6 +8,7 @@ export default {
     loading: false, // 加载状态
     goodsCateList: [], // 物品类别的List
     listData: [], // 表格数据
+    objectId: '', // 选择框数据
     inputValue: '', // 输入框数据
     treeList: [], // 左侧表格数据
     selectedKeys: [], // 左侧树 选中的key
@@ -42,9 +43,11 @@ export default {
     // get list data from server
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
-      const { pagination } = yield select(state => state.$2$Module);
+      const { objectId, inputValue, pagination } = yield select(state => state.$2$Module);
       payload.page = payload.pageNo || pagination.current;
       payload.rows = payload.pageSize || pagination.pageSize;
+      payload.cateId = objectId;
+      payload.goodsName = inputValue;
       const listData = yield call(fetchList, parse(payload));
       if (listData.data && listData.data.success) {
         yield put({
