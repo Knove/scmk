@@ -22,15 +22,6 @@ const $1$ = ({ $2$Module, dispatch }) => {
 
   const $2$TableData = {
     $2$Module,
-    onPageChange(page) {
-      dispatch({
-        type: '$2$Module/getList',
-        payload: {
-          pageNo: page.current,
-          pageSize: page.pageSize,
-        },
-      });
-    },
   };
 
   return (

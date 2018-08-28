@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Form } from 'antd';
 
-function $1$Table({ $2$Module, onPageChange }) {
+function $1$Table({ $2$Module }) {
   const state = $2$Module;
   const columns = [
     {
@@ -23,7 +23,7 @@ function $1$Table({ $2$Module, onPageChange }) {
   ];
   return (
     <div>
-      <Table columns={columns} dataSource={state.listData} loading={state.loading} onChange={onPageChange} pagination={state.pagination} rowKey={record => record.id} />
+      <Table columns={columns} dataSource={state.listData} loading={state.loading} rowKey={record => record.id} />
     </div>
   );
 }
