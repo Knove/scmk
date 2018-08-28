@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 import { Form, Select, Button, Radio, DatePicker, Input, Row, Col } from 'antd';
+import INVENTORY_PERMISSION from '../../common/Permission/inventoryPermission';
+import Permission from '../../common/Permission/Permission';
 
 const $1$Filter = ({
   // model state
@@ -11,12 +13,12 @@ const $1$Filter = ({
 }) => {
   const state = $2$Module;
   const orgOptions =
-  state.supplierList &&
-  state.supplierList.map(supplier => (
-    <Select.Option value={supplier.id} key={supplier.id}>
-      {supplier.suppName}
-    </Select.Option>
-  ));
+    state.supplierList &&
+    state.supplierList.map(supplier => (
+      <Select.Option value={supplier.id} key={supplier.id}>
+        {supplier.suppName}
+      </Select.Option>
+    ));
   return (
     <div className="components-search">
       <Form layout="inline">
@@ -102,9 +104,9 @@ const $1$Filter = ({
         </Row>
       </Form>
       <div className="float-top">
-        <Button onClick={() => {}}>
-          右上角功能框
-        </Button>
+        <Permission path={INVENTORY_PERMISSION.GOODS_RELATION.GOODS_COPY}>
+          <Button onClick={() => {}}>右上角功能框</Button>
+        </Permission>
       </div>
     </div>
   );

@@ -161,9 +161,7 @@ const $1$Filter = ({
       </Row>
       <div className="float-top">
         <Permission path={INVENTORY_PERMISSION.GOODS_RELATION.GOODS_COPY}>
-          <Button onClick={() => {}}>
-            右上角功能框
-          </Button>
+          <Button onClick={() => {}}>右上角功能框</Button>
         </Permission>
       </div>
     </div>
