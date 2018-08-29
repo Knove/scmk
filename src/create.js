@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const configAdd = require('./configAdd');
+const configAddCp = require('./configAddCp');
 const mkdirp = require('mkdirp');
 
 // global
@@ -10,6 +11,8 @@ let projectName = '';
 let modelName = '';
 let projectUrl = '';
 let menuName = '';
+const menuData = ['0', '1', '2', '3']; // controlled selectable
+const complexData = ['2']; // inner page
 
 function create(url, name, reName) {
   const rl = readline.createInterface({
@@ -19,7 +22,7 @@ function create(url, name, reName) {
   const question = `请确认你要创建的模块信息(输入N可以退出)：\n模块名：${chalk.bgMagenta(
     name,
   )}\n要创建哪一套模块？直接输入数字继续\n0.纯净模块\n1.标准外页模块\n2.完整模块\n3.左侧菜单模块\n`;
-  const menuData = ['0', '1', '2', '3'];
+
   rl.question(chalk.whiteBright(question), (answer) => {
     if (answer === 'N' || answer === 'n') console.log('Bye!');
     else if (menuData.indexOf(answer) >= 0) {
@@ -41,6 +44,8 @@ function create(url, name, reName) {
       fileDisplay(filePath);
       // add config (router add / model register/ menu info add)
       configAdd(projectUrl, projectName, modelName, menuName);
+      // if has inner page,  add detail config (router add / model register)
+      if (complexData.indexOf(answer) >= 0) configAddCp(projectUrl, projectName, modelName);
     } else {
       console.log(chalk.red('SCMK ERROR : 请输入正确的模块类型！'));
     }

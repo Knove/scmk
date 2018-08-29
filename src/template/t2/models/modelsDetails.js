@@ -5,7 +5,7 @@ import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import _ from 'lodash';
 import { proSpecModel } from './_common';
-import { findProdSpecBom, findGoodsForData, addBom, auditBom, updateAndAuditBom, addAndAuditBom } from '../../services/inventory/$2$Details';
+import { findProdSpecBom, findGoodsForData, addBom, updateAndAuditBom, addAndAuditBom } from '../../services/inventory/$2$Details';
 import { findTreeList } from '../../services/inventory/common';
 
 export default {
@@ -17,9 +17,8 @@ export default {
     checkFlag: false,
     popupListLoading: false, // 弹窗的物资选择表格的loading
     savingStatus: false, // 点击审核或者保存时防止二次点击状态控制
-    allCost: '', // ?
     pageType: '', // 内页 查看 编辑 新增的状态保存
-    goodsId: '', // ?
+    goodsId: '',
     detailsInfo: {}, // 保存info页信息
     pageDetail: [
       {
@@ -27,10 +26,11 @@ export default {
       },
     ],
     editableMem: [],
-    queryModalString: '',
+    queryModalString: '', // 弹窗的物资选择表格的模糊搜索框
     goodsList: [],
     goodsPopListModel: '', // 弹窗的物资选择表格的表格数据
-    popupListPagination: { // 弹窗的物资选择表格的分页信息
+    popupListPagination: {
+      // 弹窗的物资选择表格的分页信息
       size: 'small',
       showTotal: total => `共 ${total} 条`,
       showSizeChanger: true,
@@ -77,27 +77,6 @@ export default {
           payload: {
             detailsInfo: data.data.data,
             pageDetail: list.length > 0 ? list : [{ id: '' }],
-            loading: false,
-          },
-        });
-        yield put({
-          type: 'editableMem',
-          payload: { dataSource: [] },
-        });
-      } else {
-        message.warning(`操作失败，请参考：${data.data.errorInfo}`);
-        yield put({ type: 'hideLoading' });
-      }
-    },
-    * addBom({ payload }, { call, put }) {
-      yield put({ type: 'showLoading' });
-      const data = yield call(addBom, parse(payload));
-      if (data.data && data.data.success) {
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            detailsInfo: data.data.data,
-            pageDetail: data.data.data.specBomDetailList,
             loading: false,
           },
         });
@@ -303,8 +282,8 @@ export default {
       // 自动换焦点
       const storeEditableMem = yield select(state => state.$2$DetailModule.editableMem);
       let hasBeenSet = false;
-      let arrivedLastRowIndex = -1;
-      storeEditableMem.map((item, currRowIndex) => {
+      // let arrivedLastRowIndex = -1;
+      storeEditableMem.map((item) => {
         const itemKeys = Object.keys(item);
         const itemVales = Object.values(item);
         itemVales.map((value, colIndex) => {
@@ -319,7 +298,7 @@ export default {
                 nextRowObj[itemKeys[0]] = true;
                 hasBeenSet = true;
               } else {
-                arrivedLastRowIndex = currRowIndex;
+                // arrivedLastRowIndex = currRowIndex;
               }
             } else {
               let indexCol = colIndex + 1;
@@ -363,7 +342,7 @@ export default {
       yield put({ type: 'mergeData', payload: { pageDetail: newPageData, editableMem: newEditableMem } });
     },
     * saveRequisitionDetails({ payload }, { call, put, select }) {
-      // 根据状态保存详细信息
+      // 提交访问后台操作。（审核，保存等）
       if (payload.displaySavingMessage !== false) {
         const { pageDetail, norId, goodsId } = yield select(state => state.$2$DetailModule);
         yield put({ type: 'querySuccess', payload: { checkFlag: true } });
@@ -375,6 +354,7 @@ export default {
           message.error('第一行物资编码不能为空');
           return false;
         }
+        // 数据规整删减
         cloneListData.map((item) => {
           delete item.id;
           delete item.createTime; // 不需要手动保存创建时间
@@ -408,9 +388,6 @@ export default {
         // 根据页面状态 请求不同接口
         if (payload.status === 'save') {
           saveData = yield call(addBom, parse(detailsData));
-        } else if (payload.status === 'check') {
-          delete detailsData.goodsId;
-          saveData = yield call(auditBom, parse(detailsData));
         } else if (payload.status === 'add') {
           saveData = yield call(addAndAuditBom, parse(detailsData));
         } else if (payload.status === 'edit') {
@@ -454,14 +431,13 @@ export default {
             // 设置当前页的面包屑路径
             dispatch({
               type: 'merchantApp/changePageRouter',
-              pageRouterName: [{ edit: '编辑BOM', view: '查看BOM', add: '增加BOM' }[pageType]],
+              pageRouterName: [{ edit: '内页 - 编辑', view: '内页 - 查看', add: '内页 - 增加' }[pageType]],
             });
             // 初始化操作
             dispatch({
               type: 'mergeData',
               payload: {
                 detailsInfo: {},
-                allCost: '',
                 pageType,
                 goodsId,
                 norId: id,
@@ -472,14 +448,31 @@ export default {
                 ],
               },
             });
-            // 获取info信息以及可编辑表格数据
-            dispatch({
-              type: 'findProdSpecBom',
-              payload: {
-                goodsId,
-                id,
-              },
-            });
+            // 如果是查看或者编辑，请求后台
+            if (pageType === 'edit' || pageType === 'view') {
+              // 获取info信息以及可编辑表格数据
+              dispatch({
+                type: 'findProdSpecBom',
+                payload: {
+                  goodsId,
+                  id,
+                },
+              });
+            } else {
+              // 如果是新增，则直接初始化
+              dispatch({
+                type: 'querySuccess',
+                payload: {
+                  detailsInfo: [],
+                  pageDetail: [{ id: '' }],
+                  loading: false,
+                },
+              });
+              dispatch({
+                type: 'editableMem',
+                payload: { dataSource: [] },
+              });
+            }
           }
         }
       });

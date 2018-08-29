@@ -105,7 +105,7 @@ const $1$Filter = ({
       <div className="float-top">
         <Button
           onClick={() => {
-            routerGo('/stock/$2$/details/add/0/0');
+            routerGo('/stock/$2$/detail/add/0/0');
           }}
         >
           新增

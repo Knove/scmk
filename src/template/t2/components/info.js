@@ -9,12 +9,12 @@ const $1$DetailsFilter = ({
     {
       label: '单号',
       value: state.billNo,
-      isSkipped: !state.billNo, // 是否显示，创建时不显示请购单
+      isSkipped: !state.billNo,
     },
     {
       label: '创建人',
       value: state.scmk,
-      isSkipped: !state.scmk, // 是否显示，创建时不显示请购单
+      isSkipped: !state.scmk,
     },
   ];
   return (

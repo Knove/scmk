@@ -5,20 +5,20 @@ function $1$Table({ $2$Module, onPageChange, mergeData, routerGo }) {
   const state = $2$Module;
   const columns = [
     {
-      title: '供应商名',
-      dataIndex: 'suppName',
-      key: 'suppName',
+      title: '物品名',
+      dataIndex: 'goodsName',
+      key: 'goodsName',
     },
     {
-      title: '单号',
-      dataIndex: 'billNo',
-      key: 'billNo',
+      title: '物品规格',
+      dataIndex: 'specName',
+      key: 'specName',
     },
     {
       title: '状态',
       dataIndex: 'state',
       key: 'state',
-      render: (text, record) => <Badge status={record.status === 962 ? 'success' : 'default'} text={record.stallId ? '已设置' : '未设置'} />,
+      render: (text, record) => <Badge status={record.bomStatus === 1 ? 'success' : 'default'} text={record.bomStatus === 1 ? '已设置' : '未设置'} />,
     },
     {
       title: '操作',

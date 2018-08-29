@@ -12,3 +12,9 @@ export async function fetchTable(params) {
     body: JSON.stringify(params),
   });
 }
+export async function example(params) {
+  return request('/ipos-chains/example', {
+    method: 'post',
+    body: JSON.stringify(params),
+  });
+}

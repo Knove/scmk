@@ -37,6 +37,7 @@ const $1$DetailsList = ({
   const data = $2$DetailModule;
   let columnsConfig = [];
   const listData = data.pageDetail; // 可编辑表格内的内容
+  // 控制弹出确认框
   function showConfirm(title, info, value, callback) {
     confirm({
       title,
@@ -46,6 +47,7 @@ const $1$DetailsList = ({
       },
     });
   }
+  // 弹出物资选择框的表格列
   const onPopColumns = [
     {
       title: '物品编码',

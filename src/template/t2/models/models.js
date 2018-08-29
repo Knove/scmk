@@ -56,14 +56,13 @@ export default {
         yield put({
           type: 'mergeData',
           payload: {
-            listData: listData.data.data.page.data,
+            listData: listData.data.data.list,
             pagination: {
               showSizeChanger: true,
               showQuickJumper: true,
-              total: listData.data.data.page.totalCount,
-              current: listData.data.data.page.page,
+              total: listData.data.data.total,
+              current: listData.data.data.pageNum,
               showTotal: total => `共 ${total} 条`,
-              pageSize: listData.data.data.page.limit,
               pageSizeOptions: ['10', '20', '50', '100'],
             },
           },
