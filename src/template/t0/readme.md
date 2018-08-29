@@ -1,5 +1,6 @@
-# 模板 0
-
-纯净版：
-页面 filter 部分只有输入框，table 部分只有一个表格；
-model 的 state 里只有 loading，inputvalue 和 tableList；
+# 0 : 纯净版
+#### 一尘不染
++ 只有一个外页
++ 搜索框部分只有一个输入框
++ 只有一个纯净表格
++ model 的 state 里只存储三个可用变量
