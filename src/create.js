@@ -11,18 +11,27 @@ let projectName = '';
 let modelName = '';
 let projectUrl = '';
 let menuName = '';
-const menuData = ['0', '1', '2', '3']; // controlled selectable
-const complexData = ['2']; // inner page
+const menuData = ['0', '0+', '1', '2', '3']; // controlled selectable
+const complexData = ['2', '0+']; // inner page
 
 function create(url, name, reName) {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
-  const question = `请确认你要创建的模块信息(输入N可以退出)：\n模块名：${chalk.bgMagenta(
-    name,
-  )}\n要创建哪一套模块？直接输入数字继续\n0.纯净模块\n1.标准外页模块\n2.完整模块\n3.左侧菜单模块\n`;
-
+  const question = `
+请确认你要创建的模块信息(输入N可以退出)：
+模块名：${chalk.bgMagenta(name)}
+要创建哪一套模块？
+可以去 https://github.com/KnoveZ/scmk 查看各模块特性。
+直接输入数字继续
+${chalk.magenta('——————————————————————————')}
+0.纯净版
+1.标准外页
+2.完整版
+3.左侧树模块
+${chalk.magenta('——————————————————————————')}
+  `;
   rl.question(chalk.whiteBright(question), (answer) => {
     if (answer === 'N' || answer === 'n') console.log('Bye!');
     else if (menuData.indexOf(answer) >= 0) {
