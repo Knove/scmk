@@ -89,22 +89,6 @@ export default {
         yield put({ type: 'hideLoading' });
       }
     },
-    * queryGoodsCoding({ payload }, { call, put }) {
-      // 查询物资
-      yield put({ type: 'showLoading' });
-      const data = yield call(findGoodsForData, parse(payload));
-      if (data.data && data.data.success) {
-        yield put({
-          type: 'mergeData',
-          payload: {
-            goodsList: data.data.data.list,
-          },
-        });
-      } else {
-        message.warning(`操作失败，请参考：${data.data.errorInfo}`);
-        yield put({ type: 'hideLoading' });
-      }
-    },
     // 获取弹窗的物资列表
     * getPopListData({ payload }, { select, call, put }) {
       const { popupListPagination, queryModalString } = yield select(state => state.$2$DetailModule);
@@ -170,43 +154,6 @@ export default {
         });
       } else {
         message.warning(`操作失败，请参考：${data.data.errorInfo}`);
-      }
-    },
-    * syncSeletedItemIntoList({ payload }, { select, put }) {
-      // 将选择的物资对象合并到表格对象中
-      yield put({ type: 'showLoading' });
-      const storeListData = yield select(state => state.$2$DetailModule.pageDetail);
-      const newPageData = _.cloneDeep(storeListData); // 使用新对象
-      const selectedObjs = _.cloneDeep(payload.selectedObjs); // 使用新对象
-      selectedObjs.map((item) => {
-        item.goodsId = item.id;
-        delete item.consTranRates;
-        if (!item.lastInDepotPrice) item.lastInDepotPrice = 0;
-        if (!item.cost) item.cost = 0;
-        return null;
-      });
-      newPageData.splice(payload.index + 1, 0, ...selectedObjs); // Insert selectedObjs to newPageData at payload.index
-      newPageData.splice(payload.index, 1); // Remove the old item at index
-      yield put({ type: 'gotDetailList', pageDetail: newPageData });
-      const storeEditableMem = yield select(state => state.$2$DetailModule.editableMem);
-      storeEditableMem[payload.index][payload.fieldName] = false;
-      yield put({ type: 'setNewEditableMem', editableMem: storeEditableMem });
-      yield put({
-        type: 'querySuccess',
-        payload: {
-          cateId: '',
-          queryModalString: '',
-          popupListPagination: {
-            current: 1,
-            pageSize: 10,
-          },
-        },
-      });
-      if (payload.isModal) {
-        yield put({
-          type: 'editableMem',
-          payload: { dataSource: [] },
-        });
       }
     },
     * insertNewListItemAfterIndex({ payload }, { select, put }) {

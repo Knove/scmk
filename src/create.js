@@ -11,8 +11,8 @@ let projectName = '';
 let modelName = '';
 let projectUrl = '';
 let menuName = '';
-const menuData = ['0', '0+', '1', '2', '3']; // controlled selectable
-const complexData = ['2', '0+']; // inner page
+const menuData = ['0', '0+', '1', '2', '2.1', '3']; // controlled selectable
+const complexData = ['2', '2.1', '0+']; // inner page
 
 function create(url, name, reName) {
   const rl = readline.createInterface({
@@ -24,12 +24,14 @@ function create(url, name, reName) {
 模块名：${chalk.bgMagenta(name)}
 要创建哪一套模块？
 可以去 https://github.com/KnoveZ/scmk 查看各模块特性。
-直接输入数字继续
+直接输入左侧编号继续
 ${chalk.magenta('——————————————————————————')}
-0.纯净版
-1.标准外页
-2.完整版
-3.左侧树模块
+0    纯净版
+0+   带内页纯净版
+1    标准外页
+2    完整版
+2.1  完整版（新增物品为按钮类型）
+3    左侧树模块
 ${chalk.magenta('——————————————————————————')}
   `;
   rl.question(chalk.whiteBright(question), (answer) => {

@@ -15,9 +15,7 @@ const $1$DetailsList = ({
   cancelDetailPage,
   removeRowAtIndex,
   toNextMem,
-  selectedAGoods,
-  showGoodsListByTyping,
-  selectedListGoods,
+  addGoodsList,
   getGoodsListdata,
   onSelectedTreeItem,
   selectModalSearch,
@@ -29,10 +27,8 @@ const $1$DetailsList = ({
   refreshList,
   openGoodsModel,
   openModel,
-  syncSeletedItemIntoRow,
   saveDetails,
   insertNewRowAfterIndex,
-  getGoodsListByTyping,
 }) => {
   const data = $2$DetailModule;
   let columnsConfig = [];
@@ -218,41 +214,6 @@ const $1$DetailsList = ({
             title: '编码',
             dataIndex: 'goodsCode',
             key: 'goodsCode',
-            width: '143',
-            className: 'editable-col',
-            render: (text, record, index) =>
-              renderColumns(text, record, index, 'goodsCode', {
-                rowIdent: record.id,
-                type: 'select',
-                onKeyEnter: () => toNextMem(index, 'goodsCode'),
-                onChange: showGoodsListByTyping, // 手动输入的回调
-                selectItem: (itemValue, itemId) => {
-                  toNextMem(index, 'goodsCode');
-                  selectedAGoods(itemValue, itemId, index, 'goodsCode');
-                }, // 选择手动输入后列表的一个项目
-                keyValues: data.goodsList, // 显示响应手动输入的列表数据
-                disabledList: (() => listData.map(item => item.goodsCode))(), // 指定下拉列表中和弹窗列表中已显示的不让其可选，匹配ID
-                getPopListData: getGoodsListdata, // 第一次显示列表时触发获取数据的方法
-                popListData: data.goodsPopListModel, // getPopListData 获取的 table 里的数据
-                onPopColumns,
-                cbReceiveChoose: (datas) => {
-                  // 选择的几条数据
-                  const selectedList = _.cloneDeep(datas);
-                  selectedListGoods(selectedList, index, 'goodsCode', true); // 最后一个参数判断是否是弹窗添加
-                },
-                foundTreeList: data.foundTreeList, // tree 数据
-                onSelectTreeItem: value => onSelectedTreeItem(value), // 选择tree的类别节点
-                onModalSearch: value => selectModalSearch(value), // modal的模糊搜索
-                onCloseModel: value => onCloseModel(value), // modal的关闭触发
-                goodsListLoading: data.popupListLoading,
-
-                popListPagination: data.popupListPagination, // 翻页配置
-                onPopPageChange: onPopupPageChange, // 翻页方法
-                onPopPageSizeChange: onPopupPageSizeChange, // 修改页尺寸
-                originalProps: {
-                  // onFocusInput: () => toggleMemStatus(index, 'goodsCode'), // 修改其他的编辑状态为非编辑状态
-                },
-              }),
           },
           {
             title: '名称',
@@ -429,13 +390,6 @@ const $1$DetailsList = ({
     openGoodsModel(value);
   };
 
-  selectedAGoods = (itemValue, itemId, index, fieldName) => {
-    const selectedItem = _.find(data.goodsList, item => item.goodsCode === itemValue);
-    syncSeletedItemIntoRow([selectedItem], index, fieldName);
-  };
-  selectedListGoods = (selectedList, index, fieldName, isModal) => {
-    syncSeletedItemIntoRow(selectedList, index, fieldName, isModal);
-  };
   renderColumns = (text, record, index, field, configurations) => {
     const editable = '';
     const status = false;
@@ -475,11 +429,39 @@ const $1$DetailsList = ({
       />
     );
   };
-  showGoodsListByTyping = (value) => {
-    getGoodsListByTyping(value);
+  const configurations = {
+    checkButton: true,
+    goodsListLoading: data.popupListLoading, // loading 配置
+    popListPagination: data.popupListPagination, // 翻页配置
+    onPopPageChange: onPopupPageChange, // 翻页方法
+    foundTreeList: data.foundTreeList, // tree 数据
+    disabledList: (() => listData.map(item => item.goodsCode))(), // 指定下拉列表中和弹窗列表中已显示的不让其可选，匹配ID
+    onSelectTreeItem: value => onSelectedTreeItem(value), // 选择tree的类别节点
+    onModalSearch: value => selectModalSearch(value), // modal的模糊搜索
+    onCloseModel: () => onCloseModel(),
+    onPopPageSizeChange: onPopupPageSizeChange, // 修改页尺寸
+    popListData: data.goodsPopListModel, // getPopListData 获取的 table 里的数据
+    getPopListData: getGoodsListdata, // 第一次显示列表时触发获取数据的方法
+    onPopColumns, // 自定义弹出物品选择框列
+    type: 'button',
+    style: { display: 'inline-block' },
+    buttonType: 'primary', // 按钮样式
+    buttonText: '添加物品', // button 里的字
+    buttonSize: 'large',
+    size: 'large',
+    cbReceiveChoose: (datas) => {
+      if (data.pageDetail.length === 1 && !data.pageDetail[0].goodsCode) {
+        addGoodsList({ pageDetail: datas });
+      } else {
+        addGoodsList({ pageDetail: [...data.pageDetail, ...datas] }); // 最后一个参数判断是否是弹窗添加
+      }
+    },
   };
   return (
     <div className="components-detail-list">
+      <div style={{ float: 'right' }} className="float-top">
+        <EditableCell configurations={configurations} useEditCell="false" />
+      </div>
       <Table
         bordered
         size="small"

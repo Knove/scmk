@@ -57,20 +57,13 @@ const $1$Details = ({ $2$DetailModule, dispatch }) => {
         },
       });
     },
-    getGoodsListByTyping: (queryString) => {
+    addGoodsList(payload) {
       dispatch({
-        type: '$2$DetailModule/queryGoodsCoding',
-        payload: {
-          pageSize: 10,
-          pageNo: 1,
-          queryString,
-        },
+        type: '$2$DetailModule/mergeData',
+        payload,
       });
-    },
-    syncSeletedItemIntoRow: (selectedObjs, index, fieldName, isModal) => {
       dispatch({
-        type: '$2$DetailModule/syncSeletedItemIntoList',
-        payload: { selectedObjs, index, fieldName, isModal },
+        type: '$2$DetailModule/editableMem',
       });
     },
     toNextMem: (rowIndex, fieldName, isShow) => {
