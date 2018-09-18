@@ -28,6 +28,7 @@ const $1$DetailsList = ({
   openGoodsModel,
   openModel,
   saveDetails,
+  mergeData,
   insertNewRowAfterIndex,
 }) => {
   const data = $2$DetailModule;
@@ -423,6 +424,8 @@ const $1$DetailsList = ({
         openModel={openModel}
         goodsList={data.goodsList}
         rowIndex={index}
+        editableMem={data.editableMem}
+        mergeData={mergeData}
         clickToEdit={() => {
           currEditStatus[field] = !currEditStatus[field];
         }}

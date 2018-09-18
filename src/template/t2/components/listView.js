@@ -29,6 +29,7 @@ const $1$DetailsList = ({
   refreshList,
   openGoodsModel,
   openModel,
+  mergeData,
   syncSeletedItemIntoRow,
   saveDetails,
   insertNewRowAfterIndex,
@@ -469,6 +470,8 @@ const $1$DetailsList = ({
         openModel={openModel}
         goodsList={data.goodsList}
         rowIndex={index}
+        editableMem={data.editableMem}
+        mergeData={mergeData}
         clickToEdit={() => {
           currEditStatus[field] = !currEditStatus[field];
         }}

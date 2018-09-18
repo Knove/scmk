@@ -3,7 +3,7 @@ import { Table, Icon, Button, Tooltip, Popconfirm, Affix } from 'antd';
 import _ from 'lodash';
 import EditableCell from '../../_components/EditableCell2';
 
-const $1$DetailsList = ({ $2$DetailModule, cancelDetailPage, removeRowAtIndex, toNextMem, renderColumns, refreshList, saveDetails, insertNewRowAfterIndex }) => {
+const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRowAtIndex, toNextMem, renderColumns, refreshList, saveDetails, insertNewRowAfterIndex }) => {
   const data = $2$DetailModule;
   let columnsConfig = [];
   const listData = data.pageDetail; // 可编辑表格内的内容
@@ -139,6 +139,8 @@ const $1$DetailsList = ({ $2$DetailModule, cancelDetailPage, removeRowAtIndex, t
         onChange={value => this.handleChange(field, index, value)}
         status={status}
         goodsList={data.goodsList}
+        editableMem={data.editableMem}
+        mergeData={mergeData}
         rowIndex={index}
         clickToEdit={() => {
           currEditStatus[field] = !currEditStatus[field];

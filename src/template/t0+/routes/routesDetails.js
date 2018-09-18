@@ -9,6 +9,12 @@ const $1$Details = ({ $2$DetailModule, dispatch }) => {
   };
   const DetailsListData = {
     $2$DetailModule,
+    mergeData(payload) {
+      dispatch({
+        type: '$2$DetailModule/mergeData',
+        payload,
+      });
+    },
     toNextMem: (rowIndex, fieldName, isShow) => {
       dispatch({
         type: '$2$DetailModule/toNextMemByCurr',
