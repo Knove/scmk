@@ -5,7 +5,7 @@ const readline = require('readline');
 const configAdd = require('./configAdd');
 const configAddCp = require('./configAddCp');
 const mkdirp = require('mkdirp');
-
+const { QUE_M_SELECT, QUE_T_SCM_SELECT } = require('./question');
 // global
 let projectName = '';
 let modelName = '';
@@ -13,54 +13,62 @@ let projectUrl = '';
 let menuName = '';
 const menuData = ['0', '0+', '1', '2', '2.1', '3']; // controlled selectable
 const complexData = ['2', '2.1', '0+']; // inner page
-
+const yunMenuData = ['scm', 'yun', 'scm-java']; // controlled selectable
 function create(url, name, reName) {
+  const r0 = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
-  const question = `
-请确认你要创建的模块信息(输入N可以退出)：
-模块名：${chalk.bgMagenta(name)}
-要创建哪一套模块？
-可以去 https://github.com/KnoveZ/scmk 查看各模块特性。
-直接输入左侧编号继续
-${chalk.magenta('——————————————————————————')}
-0    纯净版
-0+   带内页纯净版
-1    标准外页
-2    完整版
-2.1  完整版（新增物品为按钮类型）
-3    左侧树模块
-${chalk.magenta('——————————————————————————')}
-  `;
-  rl.question(chalk.whiteBright(question), (answer) => {
-    if (answer === 'N' || answer === 'n') console.log('Bye!');
-    else if (menuData.indexOf(answer) >= 0) {
-      if (!name) {
-        console.log(chalk.red('SCMK ERROR : 请填入项目名称。 语法： scmk create < 项目名称 > <项目菜单名>。 例如 : scmk create helloWorld 你好世界'));
-        return null;
-      }
-      if (!url) {
-        console.log(chalk.red('SCMK ERROR : 请配置好项目目录。 语法： scmk dir < 项目目录 >。 例如 : scmk dir D:\\choice\\merchants'));
-        return null;
-      }
-      // data ready
-      menuName = reName;
-      projectName = name.substring(0, 1).toUpperCase() + name.substring(1, name.length);
-      modelName = name.substring(0, 1).toLowerCase() + name.substring(1, name.length);
-      projectUrl = url;
-      const filePath = path.join(__dirname, `./template/t${answer}/`);
-      // start
-      fileDisplay(filePath);
-      // add config (router add / model register/ menu info add)
-      configAdd(projectUrl, projectName, modelName, menuName);
-      // if has inner page,  add detail config (router add / model register)
-      if (complexData.indexOf(answer) >= 0) configAddCp(projectUrl, projectName, modelName);
+  r0.question(chalk.whiteBright(QUE_M_SELECT()), (answer0) => {
+    if (answer0 === 'N' || answer0 === 'n') console.log('Bye!');
+    else if (yunMenuData.indexOf(answer0) >= 0) {
+      console.log(`选择的项目为${chalk.bgMagenta(answer0)}`);
+      rl.question(chalk.whiteBright(QUE_T_SCM_SELECT(name)), (answer) => {
+        if (answer === 'N' || answer === 'n') console.log('Bye!');
+        else if (menuData.indexOf(answer) >= 0) {
+          if (!name) {
+            console.log(chalk.red('SCMK ERROR : 请填入项目名称。 语法： scmk create < 项目名称 > <项目菜单名>。 例如 : scmk create helloWorld 你好世界'));
+            return null;
+          }
+          if (!url) {
+            console.log(chalk.red('SCMK ERROR : 请配置好项目目录。 语法： scmk dir < 项目目录 >。 例如 : scmk dir D:\\choice\\merchants'));
+            return null;
+          }
+          // data ready
+          menuName = reName;
+          projectName = name.substring(0, 1).toUpperCase() + name.substring(1, name.length);
+          modelName = name.substring(0, 1).toLowerCase() + name.substring(1, name.length);
+          projectUrl = url;
+          const filePath = path.join(__dirname, `./template/${answer0}/t${answer}/`);
+          // start
+          switch (answer0) {
+            case 'scm':
+              fileDisplay(filePath);
+              // add config (router add / model register/ menu info add)
+              configAdd(projectUrl, projectName, modelName, menuName);
+              // if has inner page,  add detail config (router add / model register)
+              if (complexData.indexOf(answer) >= 0) configAddCp(projectUrl, projectName, modelName);
+              break;
+            case 'yun':
+              break;
+            case 'scm-java':
+              break;
+            default:
+              break;
+          }
+        } else {
+          console.log(chalk.red('SCMK ERROR : 请输入正确的模块类型！'));
+        }
+        rl.close();
+      });
     } else {
-      console.log(chalk.red('SCMK ERROR : 请输入正确的模块类型！'));
+      console.log(chalk.red('SCMK ERROR : 请输入正确的项目名称！'));
     }
-    rl.close();
+    r0.close();
   });
 }
 function fileDisplay(filePath) {
