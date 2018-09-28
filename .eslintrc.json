@@ -29,7 +29,7 @@
     "no-use-before-define": 0,
     "react/jsx-pascal-case": 0,
     "import/no-duplicates": 2,
-    "complexity": [2, 25], // 算法复杂度到25
+    "complexity": [2, 95], // 算法复杂度到25
     "max-depth": [2, 9],
     "max-len": [2, {"code": 180, "tabWidth": 2, "ignoreUrls": true}],
     "max-nested-callbacks": [2, 9],
