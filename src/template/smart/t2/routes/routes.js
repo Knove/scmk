@@ -24,7 +24,7 @@ const $1$ = ({ dispatch, cloudState }) => {
   } = cloudState.$2$;
   const loading = cloudState.loading.effects;
   // 取得$2$页面的button权限
-  const $2$Button = cloudState.account.buttonPermissions.system.set.$2$;
+  const $2$Button = cloudState.account.buttonPermissions.system.set ? cloudState.account.buttonPermissions.system.set.$2$ : {};
   const searchProps = {
     choosedCodes,
     selected$1$,

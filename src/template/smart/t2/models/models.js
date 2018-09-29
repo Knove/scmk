@@ -17,7 +17,7 @@ export default modelExtend(pageModel, {
         modalErrorValue: null,
         searchWord: null,
         choosedCodes: [],
-        selected$1$s: [],
+        selected$1$: [],
         treeData: [],
         nodeIdList: [],
         // 当前用户权重
