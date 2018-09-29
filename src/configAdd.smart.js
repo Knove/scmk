@@ -48,7 +48,7 @@ function configAdd(projectUrl, projectName, modelName, menuName) {
   if (runRouterFlag < 0) {
     const routeAnchor = routeIndexPage.indexOf(ROUTE_ANCHOR);
     if (routeAnchor >= 0) {
-      fs.writeFileSync(routeIndexUrl, insertFlg(routeIndexPage, insertRoute, routeAnchor + 8));
+      fs.writeFileSync(routeIndexUrl, insertFlg(routeIndexPage, `${insertRoute}\n`, routeAnchor + 8));
       console.log(chalk.green('SCMK SUCCESS => 成功写入routes/index.jsx增加路由监听导入[STEP1]'));
     } else console.log(chalk.red('SCMK ERROR : routes/index.jsx 文件不合法，没有找到锚点，无法增加路由监听！[STEP1]'));
   } else {
