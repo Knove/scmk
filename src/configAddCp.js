@@ -3,17 +3,17 @@ const chalk = require('chalk');
 const { insertFlg } = require('./tools/string');
 
 function configAddCp(projectUrl, projectName, modelName) {
-  const MODEL_LOGO = '//  --- SCMK  ---';
-  const MODEL_ANCHOR = 'app.use(createLoading());';
+  // const MODEL_LOGO = '//  --- SCMK  ---';
+  // const MODEL_ANCHOR = 'app.use(createLoading());';
   const ROUTE_ANCHOR = 'const routes = [';
 
-  const modelUrl = `${projectUrl}\\src\\entry\\inventory.js`;
+  // const modelUrl = `${projectUrl}\\src\\entry\\inventory.js`;
   const routeIndexUrl = `${projectUrl}\\src\\routes\\inventory\\index.jsx`;
 
   /*
     model regist [Details]
   */
-
+  /*
   const modelRegistPage = fs.readFileSync(modelUrl).toString();
   const insertModel = `app.model(require('../models/inventory/${modelName}Details'));`;
   const runFlag = modelRegistPage.indexOf(insertModel);
@@ -35,7 +35,7 @@ function configAddCp(projectUrl, projectName, modelName) {
   } else {
     console.log(chalk.blue(`SCMK INFO : 检测到模块${modelName}的model已经被注册。[Details]`));
   }
-
+  */
   /*
     router regist [Details]
   */
@@ -48,6 +48,7 @@ function configAddCp(projectUrl, projectName, modelName) {
       require.ensure(
         [],
         (require) => {
+          registerModel(app, require('./../../models/inventory/${modelName}Details'));
           cb(null, require('./${projectName}Details.jsx'));
         },
         '${projectName}Details',
