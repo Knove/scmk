@@ -61,19 +61,19 @@ function configAdd(projectUrl, projectName, modelName, menuName) {
 
   const routeIndexPage = fs.readFileSync(routeIndexUrl).toString();
   const insertRoute = `
-  {
-    path: '/stock/${modelName}',
-    getComponent(nextState, cb) {
-      require.ensure(
-        [],
-        (require) => {
-          registerModel(app, require('./../../models/inventory/${modelName}'));
-          cb(null, require('./${projectName}.jsx'));
-        },
-        '${projectName}',
-      );
-    },
-  },`;
+    {
+      path: '/stock/${modelName}',
+      getComponent(nextState, cb) {
+        require.ensure(
+          [],
+          (require) => {
+            registerModel(app, require('./../../models/inventory/${modelName}'));
+            cb(null, require('./${projectName}.jsx'));
+          },
+          '${projectName}',
+        );
+      },
+    },`;
   const runRouterFlag = routeIndexPage.indexOf(insertRoute);
   if (runRouterFlag < 0) {
     const routeAnchor = routeIndexPage.indexOf(ROUTE_ANCHOR);

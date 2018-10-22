@@ -42,19 +42,19 @@ function configAddCp(projectUrl, projectName, modelName) {
 
   const routeIndexPage = fs.readFileSync(routeIndexUrl).toString();
   const insertRoute = `
-  {
-    path: '/stock/${modelName}/detail/:status/:goodsId/:id',
-    getComponent(nextState, cb) {
-      require.ensure(
-        [],
-        (require) => {
-          registerModel(app, require('./../../models/inventory/${modelName}Details'));
-          cb(null, require('./${projectName}Details.jsx'));
-        },
-        '${projectName}Details',
-      );
-    },
-  },`;
+    {
+      path: '/stock/${modelName}/detail/:status/:goodsId/:id',
+      getComponent(nextState, cb) {
+        require.ensure(
+          [],
+          (require) => {
+            registerModel(app, require('./../../models/inventory/${modelName}Details'));
+            cb(null, require('./${projectName}Details.jsx'));
+          },
+          '${projectName}Details',
+        );
+      },
+    },`;
   const runRouterFlag = routeIndexPage.indexOf(insertRoute);
   if (runRouterFlag < 0) {
     const routeAnchor = routeIndexPage.indexOf(ROUTE_ANCHOR);
