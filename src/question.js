@@ -11,6 +11,10 @@ function SELECT(type) {
 2.1  完整版（新增物品为按钮类型）
 3    左侧树模块
 `;
+    case 'scm-s':
+      return `
+s0+    带内页纯净版特别版
+`;
     case 'smart':
       return `
 2    完整版
@@ -29,6 +33,7 @@ function QUE_M_SELECT() {
 直接输入左侧单词继续
 ${chalk.magenta('——————————————————————————')}
 ${chalk.blue('scm         供应链前端项目')}
+${chalk.blue('scm-s       供应链前端项目（特别版）')}
 ${chalk.blue('smart       云平台前端项目')}
 ${chalk.yellowBright('scm-java    供应链后端项目')}
 ${chalk.magenta('——————————————————————————')}

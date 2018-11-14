@@ -4,6 +4,7 @@ const path = require('path');
 const readline = require('readline');
 const configAdd = require('./configAdd');
 const configAddSmart = require('./configAdd.smart');
+const configAddScmS = require('./configAdd.scmS');
 const configAddCp = require('./configAddCp');
 const mkdirp = require('mkdirp');
 const { QUE_M_SELECT, QUE_T_SELECT } = require('./question');
@@ -13,9 +14,9 @@ let modelName = '';
 let projectUrl = '';
 let menuName = '';
 let type = ''; // selected scmk type
-const menuData = ['0', '0+', '1', '2', '2.1', '3']; // controlled selectable
+const menuData = ['0', '0+', 's0+', '1', '2', '2.1', '3']; // controlled selectable
 const complexData = ['2', '2.1', '0+']; // inner page
-const yunMenuData = ['scm', 'smart', 'scm-java']; // controlled selectable
+const yunMenuData = ['scm', 'scm-s', 'smart', 'scm-java']; // controlled selectable
 function create(url, name, reName) {
   const r0 = readline.createInterface({
     input: process.stdin,
@@ -55,6 +56,10 @@ function create(url, name, reName) {
               configAdd(projectUrl, projectName, modelName, menuName); // add config (router add / model register/ menu info add)
               // if has inner page,  add detail config (router add / model register)
               if (complexData.indexOf(answer) >= 0) configAddCp(projectUrl, projectName, modelName);
+              break;
+            case 'scm-s':
+              fileDisplay(filePath);
+              configAddScmS(projectUrl, projectName, modelName, menuName); // add config (router add / model register/ menu info add)
               break;
             case 'smart':
               fileDisplay(filePath);
@@ -166,6 +171,51 @@ function fileDisplay(filePath) {
                   case 'services.js':
                     wpath = `${projectUrl}\\src\\services\\system\\${modelName}.js`;
                     dir = `${projectUrl}\\src\\services\\system`;
+                    break;
+                  default:
+                    break;
+                }
+              } else if (type === 'scm-s') {
+                switch (filename) {
+                  case 'filter.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\filter.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    break;
+                  case 'table.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\table.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    break;
+                  case 'models.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\models\\${modelName}.js`;
+                    dir = `${projectUrl}\\src\\models\\inventory\\${projectName}\\models`;
+                    break;
+                  case 'routes.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\${projectName}.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}`;
+                    break;
+                  case 'services.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\services\\${modelName}.js`;
+                    dir = `${projectUrl}\\src\\models\\Inventory\\${projectName}\\services`;
+                    break;
+                  case 'info.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\info.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    break;
+                  case 'listView.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\listView.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    break;
+                  case 'modelsDetails.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\models\\${modelName}Details.js`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\models`;
+                    break;
+                  case 'servicesDetails.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\services\\${modelName}Details.js`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\services`;
+                    break;
+                  case 'routesDetails.js':
+                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\${projectName}Details.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}`;
                     break;
                   default:
                     break;
