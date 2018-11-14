@@ -41,8 +41,8 @@ function configAdd(projectUrl, projectName, modelName, menuName) {
         require.ensure(
           [],
           (require) => {
-            registerModel(app, require('./../../components/Inventory/${projectName}/models/${modelName}'));
-            cb(null, require('./../../components/Inventory/${projectName}/${projectName}.jsx'));
+            registerModel(app, require('./../../components/Vehicle/${projectName}/models/${modelName}'));
+            cb(null, require('./../../components/Vehicle/${projectName}/${projectName}.jsx'));
           },
           '${projectName}',
         );
@@ -54,8 +54,8 @@ function configAdd(projectUrl, projectName, modelName, menuName) {
         require.ensure(
           [],
           (require) => {
-            registerModel(app, require('./../../components/Inventory/${projectName}/models/${modelName}Details'));
-            cb(null, require('./../../components/Inventory/${projectName}/${projectName}Details.jsx'));
+            registerModel(app, require('./../../components/Vehicle/${projectName}/models/${modelName}Details'));
+            cb(null, require('./../../components/Vehicle/${projectName}/${projectName}Details.jsx'));
           },
           '${projectName}Details',
         );

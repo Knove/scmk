@@ -178,44 +178,44 @@ function fileDisplay(filePath) {
               } else if (type === 'scm-s') {
                 switch (filename) {
                   case 'filter.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\filter.jsx`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components\\filter.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components`;
                     break;
                   case 'table.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\table.jsx`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components\\table.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components`;
                     break;
                   case 'models.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\models\\${modelName}.js`;
-                    dir = `${projectUrl}\\src\\models\\inventory\\${projectName}\\models`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\models\\${modelName}.js`;
+                    dir = `${projectUrl}\\src\\models\\Vehicle\\${projectName}\\models`;
                     break;
                   case 'routes.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\${projectName}.jsx`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\${projectName}.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}`;
                     break;
                   case 'services.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\services\\${modelName}.js`;
-                    dir = `${projectUrl}\\src\\models\\Inventory\\${projectName}\\services`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\services\\${modelName}.js`;
+                    dir = `${projectUrl}\\src\\models\\Vehicle\\${projectName}\\services`;
                     break;
                   case 'info.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\info.jsx`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components\\info.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components`;
                     break;
                   case 'listView.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components\\listView.jsx`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\components`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components\\listView.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components`;
                     break;
                   case 'modelsDetails.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\models\\${modelName}Details.js`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\models`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\models\\${modelName}Details.js`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\models`;
                     break;
                   case 'servicesDetails.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\services\\${modelName}Details.js`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\services`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\services\\${modelName}Details.js`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\services`;
                     break;
                   case 'routesDetails.js':
-                    wpath = `${projectUrl}\\src\\components\\Inventory\\${projectName}\\${projectName}Details.jsx`;
-                    dir = `${projectUrl}\\src\\components\\Inventory\\${projectName}`;
+                    wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\${projectName}Details.jsx`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}`;
                     break;
                   default:
                     break;

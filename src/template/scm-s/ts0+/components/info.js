@@ -1,5 +1,5 @@
 import React from 'react';
-import { DetailTable } from '../../_components/hermes-react/components/index.jsx';
+import { DetailTable } from '../../../Inventory/_components/hermes-react/components/index';
 
 const $1$DetailsFilter = ({ $2$DetailModule }) => {
   const state = $2$DetailModule;

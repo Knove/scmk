@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Icon, Button, Tooltip, Popconfirm, Affix } from 'antd';
 import _ from 'lodash';
-import EditableCell from '../../_components/EditableCell2';
+import EditableCell from '../../../Inventory/_components/EditableCell2';
 
 const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRowAtIndex, toNextMem, renderColumns, refreshList, saveDetails, insertNewRowAfterIndex }) => {
   const data = $2$DetailModule;
