@@ -1,6 +1,7 @@
 # SCMK - 模块快速创建
 [![NPM version](https://img.shields.io/npm/v/scmk.svg?style=flat)](https://npmjs.org/package/scmk)
-
+[![MIT](https://img.shields.io/dub/l/vibe-d.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/KnoveZ/scmk.svg?style=flat-square)](https://github.com/KnoveZ/scmk/issues)
 ---
 ## 安装
 
