@@ -187,7 +187,7 @@ function fileDisplay(filePath) {
                     break;
                   case 'models.js':
                     wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\models\\${modelName}.js`;
-                    dir = `${projectUrl}\\src\\models\\Vehicle\\${projectName}\\models`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\models`;
                     break;
                   case 'routes.js':
                     wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\${projectName}.jsx`;
@@ -195,7 +195,7 @@ function fileDisplay(filePath) {
                     break;
                   case 'services.js':
                     wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\services\\${modelName}.js`;
-                    dir = `${projectUrl}\\src\\models\\Vehicle\\${projectName}\\services`;
+                    dir = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\services`;
                     break;
                   case 'info.js':
                     wpath = `${projectUrl}\\src\\components\\Vehicle\\${projectName}\\components\\info.jsx`;
