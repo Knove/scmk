@@ -2,7 +2,6 @@ import { parse } from 'qs';
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
 import pathToRegexp from 'path-to-regexp';
-import moment from 'moment';
 import _ from 'lodash';
 import { proSpecModel } from '../../../../models/inventory/_common';
 import { findProdSpecBom, updateAndAuditBom } from '../services/$2$Details';
