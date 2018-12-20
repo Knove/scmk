@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Form } from 'antd';
+import { Table, Form, Divider } from 'antd';
 
 function $1$Table({ $2$Module, onPageChange, routerGo }) {
   const state = $2$Module;
@@ -27,7 +27,7 @@ function $1$Table({ $2$Module, onPageChange, routerGo }) {
           >
             查看
           </a>
-          <span className="ant-divider" />
+          <Divider type="vertical" />
           <a
             onClick={() => {
               routerGo(`/stock/$2$/detail/edit/0/${record.id}`);
