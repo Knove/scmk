@@ -8,8 +8,8 @@ export default {
     loading: false, // 加载状态
     listData: [], // 表格数据
     inputValue: '', // 输入框数据
-    // 分页
     pagination: {
+      // 分页
       showSizeChanger: true,
       showQuickJumper: true,
       showTotal: total => `共 ${total} 条`,
@@ -32,7 +32,7 @@ export default {
     },
   },
   effects: {
-    // get list data from server
+    // 获取表格数据
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
       const { pagination } = yield select(state => state.$2$Module);
