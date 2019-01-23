@@ -15,18 +15,21 @@ const $1$Details = ({ $2$DetailModule, dispatch }) => {
         payload,
       });
     },
+    // 自动换焦点
     toNextMem: (rowIndex, fieldName, isShow) => {
       dispatch({
         type: '$2$DetailModule/toNextMemByCurr',
         payload: { rowIndex, fieldName, isShow },
       });
     },
+    // 添加一行
     insertNewRowAfterIndex: (index) => {
       dispatch({
         type: '$2$DetailModule/insertNewListItemAfterIndex',
         payload: { index },
       });
     },
+    // 删除一行
     removeRowAtIndex: (index) => {
       dispatch({
         type: '$2$DetailModule/removeListItemAtIndex',
@@ -43,13 +46,6 @@ const $1$Details = ({ $2$DetailModule, dispatch }) => {
       dispatch({
         type: '$2$DetailModule/cancelDetailData',
         payload: {},
-      });
-
-      dispatch({
-        type: '$2$DetailModule/querySuccess',
-        payload: {
-          findList: [],
-        },
       });
     },
   };

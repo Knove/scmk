@@ -1,18 +1,16 @@
 import { parse } from 'qs';
 import { message } from 'antd';
-import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import { fetchList } from '../../services/inventory/$2$';
 
 export default {
   namespace: '$2$Module',
   state: {
-    text: 'Hello, Scmk ! :D', // Hello, Scmk !
     loading: false, // 加载状态
     listData: [], // 表格数据
     inputValue: '', // 输入框数据
-    // 分页
     pagination: {
+      // 分页
       showSizeChanger: true,
       showQuickJumper: true,
       showTotal: total => `共 ${total} 条`,
@@ -23,7 +21,6 @@ export default {
     },
   },
   reducers: {
-    // Update state.
     mergeData(state, action) {
       return { ...state, ...action.payload };
     },
@@ -35,7 +32,7 @@ export default {
     },
   },
   effects: {
-    // get list data from server
+    // 获取表格数据
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
       const { pagination } = yield select(state => state.$2$Module);
@@ -52,6 +49,7 @@ export default {
               showQuickJumper: true,
               total: listData.data.data.total,
               current: listData.data.data.pageNum,
+              pageSize: listData.data.data.pageSize,
               showTotal: total => `共 ${total} 条`,
               pageSizeOptions: ['10', '20', '50', '100'],
             },
@@ -80,7 +78,7 @@ export default {
           // 初始化请求表格
           dispatch({
             type: 'getList',
-            payload: { page: 1, rows: 10 },
+            payload: {},
           });
         }
       });

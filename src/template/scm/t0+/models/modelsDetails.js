@@ -10,19 +10,13 @@ import { findProdSpecBom, updateAndAuditBom } from '../../services/inventory/$2$
 export default {
   namespace: '$2$DetailModule',
   state: {
-    billNo: '123456', // info页的单号
     loading: false,
     savingStatus: false, // 点击保存时防止二次点击状态控制
-    pageType: '', // 内页查看、编辑的状态保存
+    pageType: '', // 内页类型
     goodsId: '',
-    detailsInfo: {}, // 保存info页信息
-    pageDetail: [
-      {
-        id: '',
-      },
-    ],
+    detailsInfo: {}, // 内页信息
+    pageDetail: [{ id: '' }], // 内页表格数据
     editableMem: [],
-    goodsList: [],
   },
   reducers: {
     showLoading(state) {
@@ -34,15 +28,6 @@ export default {
     mergeData(state, action) {
       return { ...state, ...action.payload, loading: false };
     },
-    querySuccess(state, action) {
-      return { ...state, ...action.payload };
-    },
-    setNewEditableMem(state, action) {
-      return { ...state, editableMem: action.editableMem };
-    },
-    gotDetailList(state, action) {
-      return { ...state, pageDetail: action.pageDetail, loading: false };
-    },
   },
   effects: {
     // 获取表格数据
@@ -52,7 +37,7 @@ export default {
       if (data.data && data.data.success) {
         const list = data.data.data.specBomDetailList;
         yield put({
-          type: 'querySuccess',
+          type: 'mergeData',
           payload: {
             detailsInfo: data.data.data,
             pageDetail: list.length > 0 ? list : [{ id: '' }],
@@ -75,7 +60,7 @@ export default {
       const emptyItem = _.cloneDeep(proSpecModel);
       emptyItem.id = moment().toISOString();
       newPageData.splice(payload.index + 1, 0, emptyItem);
-      yield put({ type: 'gotDetailList', pageDetail: newPageData });
+      yield put({ type: 'mergeData', payload: { pageDetail: newPageData } });
       // 重新添加一行mem记录
       const storeEditableMem = yield select(state => state.$2$DetailModule.editableMem);
       const tempRow = _.cloneDeep(storeEditableMem[0]);
@@ -89,7 +74,7 @@ export default {
         return false;
       });
       storeEditableMem.splice(payload.index + 1, 0, tempRow);
-      yield put({ type: 'setNewEditableMem', editableMem: storeEditableMem });
+      yield put({ type: 'mergeData', payload: { editableMem: storeEditableMem } });
       yield put({ type: 'toggleMemStatus', payload: { rowIndex: payload.index + 1, fieldName: tempRowKeys[0] } });
     },
     // 指控其他所有的焦点状态
@@ -117,7 +102,7 @@ export default {
       for (let i = 0; i < data.length; i += 1) {
         editableMemData[i] = _.cloneDeep({});
       }
-      yield put({ type: 'querySuccess', payload: { editableMem: editableMemData } });
+      yield put({ type: 'mergeData', payload: { editableMem: editableMemData } });
     },
     // 自动换焦点
     * toNextMemByCurr({ payload }, { select, put }) {
@@ -157,7 +142,7 @@ export default {
         });
         return null;
       });
-      yield put({ type: 'mergeData', editableMem: storeEditableMem });
+      yield put({ type: 'mergeData', payload: { editableMem: storeEditableMem } });
     },
     // 返回
     * cancelDetailData({ payload }, { put }) {
@@ -165,13 +150,23 @@ export default {
       yield put(routerRedux.push(path));
       // 初始化一些信息
       yield put({
-        type: 'querySuccess',
+        type: 'initAction',
+        payload: {},
+      });
+    },
+    // 初始化一些信息
+    * initAction({ payload }, { put }) {
+      yield put({
+        type: 'mergeData',
         payload: {
           savingStatus: false,
+          detailsInfo: {}, // 内页信息
+          pageDetail: [{ id: '' }], // 内页表格数据
+          editableMem: [],
         },
       });
     },
-    // 点击删除行按钮在某一下标下添加一行
+    // 点击删除行按钮在某一下标下删除一行
     * removeListItemAtIndex({ payload }, { select, put }) {
       yield put({ type: 'showLoading' });
       const storeListData = yield select(state => state.$2$DetailModule.pageDetail);
@@ -237,17 +232,15 @@ export default {
             });
             // 初始化操作
             dispatch({
+              type: 'initAction',
+              payload: {},
+            });
+            dispatch({
               type: 'mergeData',
               payload: {
-                detailsInfo: {},
                 pageType,
                 goodsId,
                 norId: id,
-                pageDetail: [
-                  {
-                    id: '',
-                  },
-                ],
               },
             });
             dispatch({

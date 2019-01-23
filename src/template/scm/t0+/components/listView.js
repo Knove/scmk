@@ -103,10 +103,10 @@ const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRo
       },
     ];
   }
+  // 更新数据
   refreshList = (value, itemKey, fieldName, rowIndex) => {
     const rowItem = _.find(listData, item => item.id === itemKey);
     rowItem[fieldName] = value;
-    // 联动更新处
   };
   renderColumns = (text, record, index, field, configurations) => {
     const editable = '';
@@ -124,11 +124,9 @@ const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRo
         currEditStatus[field] = false; // 默认不在编辑状态
       }
     }
-
     if (typeof editable === 'undefined') {
       return text;
     }
-
     return (
       <EditableCell
         configurations={configurations}
@@ -138,7 +136,6 @@ const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRo
         validation={lineItem}
         onChange={value => this.handleChange(field, index, value)}
         status={status}
-        goodsList={data.goodsList}
         editableMem={data.editableMem}
         mergeData={mergeData}
         rowIndex={index}
@@ -162,11 +159,13 @@ const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRo
       />
       <Affix offsetBottom={0} className="detail-page-actions">
         {data.pageType === 'edit' && (
-          <Button onClick={() => saveDetails()} disabled={data.savingStatus}>
+          <Button type="primary" onClick={() => saveDetails()} disabled={data.savingStatus}>
             保存
           </Button>
         )}
-        <Button onClick={cancelDetailPage}>返回</Button>
+        <Button onClick={cancelDetailPage} disabled={data.savingStatus}>
+          返回
+        </Button>
       </Affix>
     </div>
   );
