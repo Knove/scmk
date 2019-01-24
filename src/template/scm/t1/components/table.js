@@ -18,7 +18,7 @@ function $1$Table({ $2$Module, onPageChange, mergeData }) {
       title: '状态',
       dataIndex: 'state',
       key: 'state',
-      render: (text, record) => <Badge status={record.status === 962 ? 'success' : 'default'} text={record.stallId ? '已设置' : '未设置'} />,
+      render: (text, record) => <Badge status={record.status === 962 ? 'success' : 'default'} text={record.status === 962 ? '已设置' : '未设置'} />,
     },
     {
       title: '操作',

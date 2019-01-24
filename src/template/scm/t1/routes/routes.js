@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import moment from 'moment';
 import $1$Filter from '../../components/Inventory/$1$/filter';
 import $1$Table from '../../components/Inventory/$1$/table';
 
@@ -18,11 +19,22 @@ const $1$ = ({ $2$Module, dispatch }) => {
         payload: {},
       });
     },
-    supplierSearchAction(value) {
+    clearAction() {
       dispatch({
-        type: '$2$Module/querySupplier',
+        type: '$2$Module/mergeData',
         payload: {
-          queryString: value,
+          supplyId: '', // 下拉选中的数据
+          inputValue: '', // 输入框数据
+          status: '', // 状态数据
+          datePicker: [moment().subtract(1, 'months'), moment()], // 日期选择框数据
+          selectedRowKeys: [], // 表格多选的数据集合
+        },
+      });
+      dispatch({
+        type: '$2$Module/getList',
+        payload: {
+          pageNo: 1,
+          pageSize: 10,
         },
       });
     },
