@@ -6,6 +6,7 @@ const $1$Filter = ({
   $2$Module,
   mergeData,
   searchAction,
+  clearAction,
 }) => {
   const state = $2$Module;
   return (
@@ -30,6 +31,7 @@ const $1$Filter = ({
               <Button type="primary" onClick={() => searchAction()}>
                 搜索
               </Button>
+              <Button onClick={() => clearAction()}>清除条件</Button>
             </Form.Item>
           </Col>
         </Row>

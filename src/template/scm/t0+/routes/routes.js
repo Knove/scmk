@@ -18,6 +18,21 @@ const $1$ = ({ $2$Module, dispatch }) => {
         payload: {},
       });
     },
+    clearAction() {
+      dispatch({
+        type: '$2$Module/mergeData',
+        payload: {
+          inputValue: '', // 输入框数据
+        },
+      });
+      dispatch({
+        type: '$2$Module/getList',
+        payload: {
+          pageNo: 1,
+          pageSize: 10,
+        },
+      });
+    },
   };
 
   const $2$TableData = {
