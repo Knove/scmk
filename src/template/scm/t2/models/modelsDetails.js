@@ -5,29 +5,23 @@ import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import _ from 'lodash';
 import { proSpecModel } from './_common';
-import { findProdSpecBom, findGoodsForData, addBom, updateAndAuditBom, addAndAuditBom } from '../../services/inventory/$2$Details';
-import { findTreeList } from '../../services/inventory/common';
+import { findProdSpecBom, addBom } from '../../services/inventory/$2$Details';
+import { findTreeList, findGoodsForPage } from '../../services/inventory/common';
 
 export default {
   namespace: '$2$DetailModule',
   state: {
-    billNo: '123456', // info页的单号
-    scmk: 'SCMK', // info页的创建人
     loading: false,
-    checkFlag: false,
     popupListLoading: false, // 弹窗的物资选择表格的loading
     savingStatus: false, // 点击审核或者保存时防止二次点击状态控制
-    pageType: '', // 内页 查看 编辑 新增的状态保存
+    pageType: '', // 内页的状态
     goodsId: '',
-    detailsInfo: {}, // 保存info页信息
-    pageDetail: [
-      {
-        id: '',
-      },
-    ],
+    detailsInfo: {}, // 内页信息
+    pageDetail: [{ id: '' }], // 内页表格信息
     editableMem: [],
-    queryModalString: '', // 弹窗的物资选择表格的模糊搜索框
-    goodsList: [],
+    queryModalString: '', // 物资的模糊搜索框
+    cateId: '', // 物资的类别id
+    goodsList: [], // 弹窗的物资list
     goodsPopListModel: '', // 弹窗的物资选择表格的表格数据
     popupListPagination: {
       // 弹窗的物资选择表格的分页信息
@@ -50,49 +44,36 @@ export default {
       return { ...state, loading: false };
     },
     mergeData(state, action) {
-      return { ...state, ...action.payload, loading: false };
-    },
-    querySuccess(state, action) {
       return { ...state, ...action.payload };
-    },
-    setNewEditableMem(state, action) {
-      return { ...state, editableMem: action.editableMem };
-    },
-    gotDetailList(state, action) {
-      return { ...state, pageDetail: action.pageDetail, loading: false };
-    },
-    changeSavingStatus(state, action) {
-      return { ...state, savingStatus: action.savingStatus, tamplateId: action.tamplateId };
     },
   },
   effects: {
-    // Jump to this, get Data
+    // 获取表格数据
     * findProdSpecBom({ payload }, { call, put }) {
       yield put({ type: 'showLoading' });
       const data = yield call(findProdSpecBom, parse(payload));
       if (data.data && data.data.success) {
-        const list = data.data.data.specBomDetailList;
+        const detailsInfo = data.data.data;
         yield put({
-          type: 'querySuccess',
+          type: 'mergeData',
           payload: {
-            detailsInfo: data.data.data,
-            pageDetail: list.length > 0 ? list : [{ id: '' }],
-            loading: false,
+            detailsInfo,
+            pageDetail: detailsInfo.specBomDetailList.length > 0 ? detailsInfo.specBomDetailList : [{ id: '' }],
           },
         });
         yield put({
           type: 'editableMem',
-          payload: { dataSource: [] },
+          payload: {},
         });
       } else {
         message.warning(`操作失败，请参考：${data.data.errorInfo}`);
-        yield put({ type: 'hideLoading' });
       }
+      yield put({ type: 'hideLoading' });
     },
+    // 查询物资|手动输入的回调
     * queryGoodsCoding({ payload }, { call, put }) {
-      // 查询物资
       yield put({ type: 'showLoading' });
-      const data = yield call(findGoodsForData, parse(payload));
+      const data = yield call(findGoodsForPage, parse(payload));
       if (data.data && data.data.success) {
         yield put({
           type: 'mergeData',
@@ -102,43 +83,26 @@ export default {
         });
       } else {
         message.warning(`操作失败，请参考：${data.data.errorInfo}`);
-        yield put({ type: 'hideLoading' });
       }
+      yield put({ type: 'hideLoading' });
     },
     // 获取弹窗的物资列表
     * getPopListData({ payload }, { select, call, put }) {
-      const { popupListPagination, queryModalString } = yield select(state => state.$2$DetailModule);
+      yield put({ type: 'mergeData', payload: { popupListLoading: true } });
+      const { popupListPagination, queryModalString, cateId } = yield select(state => state.$2$DetailModule);
       const pageNo = payload.pageNo || popupListPagination.current;
       const pageSize = payload.pageSize || popupListPagination.pageSize;
-      const queryString = payload.queryString || payload.queryString === '' ? payload.queryString : queryModalString;
-      if (payload.queryString || payload.queryString === '') {
-        yield put({ type: 'mergeData', payload: { queryModalString: payload.queryString, popupListLoading: true } });
-      } else {
-        yield put({ type: 'mergeData', payload: { popupListLoading: true } });
-      }
-      let reqParams = {};
-      const thisCateId = payload.cateId;
-      if (thisCateId) {
-        reqParams = {
-          cateId: thisCateId,
-          page: pageNo, // 查看第几页内容 默认1
-          rows: pageSize, // 一页展示条数 默认10
-          queryString, // 查询条件
-        };
-      } else {
-        reqParams = {
-          page: pageNo, // 查看第几页内容 默认1
-          rows: pageSize, // 一页展示条数 默认10}
-          queryString, // 查询条件
-          cateId: '',
-        };
-      }
-      const goodsData = yield call(findGoodsForData, parse(reqParams));
-      if (goodsData && goodsData.data) {
+      const reqParams = {
+        page: pageNo,
+        rows: pageSize,
+        queryString: queryModalString,
+        cateId,
+      };
+      const goodsData = yield call(findGoodsForPage, parse(reqParams));
+      if (goodsData.data && goodsData.data.success) {
         yield put({
           type: 'mergeData',
           payload: {
-            popupListLoading: false,
             goodsPopListModel: goodsData.data,
             popupListPagination: {
               showSizeChanger: true,
@@ -152,14 +116,14 @@ export default {
             },
           },
         });
+      } else {
+        message.warning(`操作失败，请参考：${goodsData.data.errorInfo}`);
       }
+      yield put({ type: 'mergeData', payload: { popupListLoading: false } });
     },
-    // 选择物品的左侧 类别栏
-    * searchTreeList({ payload }, { call, put, select }) {
-      const { selectedStallId, selectedStoreId } = yield select(state => state.$2$DetailModule);
-      payload.storeId = selectedStoreId;
-      payload.stallId = selectedStallId;
-      // 查找物资类别
+    // 弹窗左侧类别栏
+    * searchTreeList({ payload }, { call, put }) {
+      payload.type = 0;
       const data = yield call(findTreeList, parse(payload));
       if (data.data && data.data.success) {
         yield put({
@@ -172,27 +136,24 @@ export default {
         message.warning(`操作失败，请参考：${data.data.errorInfo}`);
       }
     },
+    // 将选择的物资对象合并到表格对象中
     * syncSeletedItemIntoList({ payload }, { select, put }) {
-      // 将选择的物资对象合并到表格对象中
-      yield put({ type: 'showLoading' });
       const storeListData = yield select(state => state.$2$DetailModule.pageDetail);
       const newPageData = _.cloneDeep(storeListData); // 使用新对象
       const selectedObjs = _.cloneDeep(payload.selectedObjs); // 使用新对象
       selectedObjs.map((item) => {
         item.goodsId = item.id;
-        delete item.consTranRates;
-        if (!item.lastInDepotPrice) item.lastInDepotPrice = 0;
-        if (!item.cost) item.cost = 0;
+        delete item.id;
         return null;
       });
-      newPageData.splice(payload.index + 1, 0, ...selectedObjs); // Insert selectedObjs to newPageData at payload.index
-      newPageData.splice(payload.index, 1); // Remove the old item at index
-      yield put({ type: 'gotDetailList', pageDetail: newPageData });
+      newPageData.splice(payload.index + 1, 0, ...selectedObjs);
+      newPageData.splice(payload.index, 1);
+      yield put({ type: 'mergeData', payload: { pageDetail: newPageData } });
       const storeEditableMem = yield select(state => state.$2$DetailModule.editableMem);
       storeEditableMem[payload.index][payload.fieldName] = false;
-      yield put({ type: 'setNewEditableMem', editableMem: storeEditableMem });
+      yield put({ type: 'mergeData', payload: { editableMem: storeEditableMem } });
       yield put({
-        type: 'querySuccess',
+        type: 'mergeData',
         payload: {
           cateId: '',
           queryModalString: '',
@@ -205,19 +166,18 @@ export default {
       if (payload.isModal) {
         yield put({
           type: 'editableMem',
-          payload: { dataSource: [] },
+          payload: {},
         });
       }
     },
+    // 点击添加行按钮在某一下标下添加一行
     * insertNewListItemAfterIndex({ payload }, { select, put }) {
-      // 点击添加行按钮在某一下标下添加一行
-      yield put({ type: 'showLoading' });
       const storeListData = yield select(state => state.$2$DetailModule.pageDetail);
       const newPageData = _.cloneDeep(storeListData); // 使用新对象
       const emptyItem = _.cloneDeep(proSpecModel);
       emptyItem.id = moment().toISOString();
       newPageData.splice(payload.index + 1, 0, emptyItem);
-      yield put({ type: 'gotDetailList', pageDetail: newPageData });
+      yield put({ type: 'mergeData', payload: { pageDetail: newPageData } });
       // 重新添加一行mem记录
       const storeEditableMem = yield select(state => state.$2$DetailModule.editableMem);
       const tempRow = _.cloneDeep(storeEditableMem[0]);
@@ -231,11 +191,11 @@ export default {
         return false;
       });
       storeEditableMem.splice(payload.index + 1, 0, tempRow);
-      yield put({ type: 'setNewEditableMem', editableMem: storeEditableMem });
+      yield put({ type: 'mergeData', payload: { editableMem: storeEditableMem } });
       yield put({ type: 'toggleMemStatus', payload: { rowIndex: payload.index + 1, fieldName: tempRowKeys[0] } });
     },
+    // 指控其他所有的焦点状态
     * toggleMemStatus({ payload }, { select, put }) {
-      // 指控其他所有的焦点状态
       const storeNewEditableMem = yield select(state => state.$2$DetailModule.editableMem);
       const storeEditableMem = _.cloneDeep(storeNewEditableMem);
       storeEditableMem.map((item, rowIndex) => {
@@ -253,33 +213,17 @@ export default {
       });
       yield put({ type: 'mergeData', payload: { editableMem: storeEditableMem } });
     },
-    * syncMemFields({ payload }, { put, select }) {
-      // 初始化可编辑列
-      const storeEditableMem = yield select(state => state.$2$DetailModule.editableMem);
-      const storeListData = yield select(state => state.$2$DetailModule.pageDetail);
-      const fieldName = payload.fieldName;
-      storeListData.map((item, index) => {
-        const memRowColumns = storeEditableMem[index] && Object.keys(storeEditableMem[index]);
-        if (!storeEditableMem[index]) {
-          storeEditableMem[index] = {};
-          storeEditableMem[index][fieldName] = false;
-        } else if (memRowColumns && memRowColumns.length > 0 && !memRowColumns.includes(fieldName)) {
-          storeEditableMem[index][fieldName] = false;
-        }
-        return false;
-      });
-      yield put({ type: 'setNewEditableMem', editableMem: storeEditableMem });
-    },
+    // 初始化可编辑列
     * editableMem({ payload }, { put, select }) {
       const data = yield select(state => state.$2$DetailModule.pageDetail);
       const editableMemData = Array(data.length);
       for (let i = 0; i < data.length; i += 1) {
         editableMemData[i] = _.cloneDeep({});
       }
-      yield put({ type: 'querySuccess', payload: { editableMem: editableMemData } });
+      yield put({ type: 'mergeData', payload: { editableMem: editableMemData } });
     },
+    // 自动换焦点
     * toNextMemByCurr({ payload }, { select, put }) {
-      // 自动换焦点
       const storeEditableMem = yield select(state => state.$2$DetailModule.editableMem);
       let hasBeenSet = false;
       // let arrivedLastRowIndex = -1;
@@ -316,23 +260,49 @@ export default {
         });
         return null;
       });
-      yield put({ type: 'setNewEditableMem', editableMem: storeEditableMem });
+      yield put({ type: 'mergeData', payload: { editableMem: storeEditableMem } });
     },
+    // 返回
     * cancelDetailData({ payload }, { put }) {
-      // 返回
       const path = '/stock/$2$';
       yield put(routerRedux.push(path));
       // 初始化一些信息
       yield put({
-        type: 'querySuccess',
+        type: 'initValue',
+        payload: {},
+      });
+    },
+    // 初始化一些信息
+    * initValue({ payload }, { put }) {
+      yield put({
+        type: 'mergeData',
         payload: {
-          savingStatus: false,
+          loading: false,
+          popupListLoading: false, // 弹窗的物资选择表格的loading
+          savingStatus: false, // 点击审核或者保存时防止二次点击状态控制
+          detailsInfo: {}, // 内页信息
+          pageDetail: [{ id: '' }], // 内页表格信息
+          editableMem: [],
+          queryModalString: '', // 物资的模糊搜索框
+          goodsList: [], // 弹窗的物资list
+          goodsPopListModel: '', // 弹窗的物资选择表格的表格数据
+          popupListPagination: {
+            // 弹窗的物资选择表格的分页信息
+            size: 'small',
+            showTotal: total => `共 ${total} 条`,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            current: 1,
+            total: 0,
+            pageSize: 10,
+            pageSizeOptions: ['10', '20', '50', '100'],
+          },
+          foundTreeList: [], // 弹窗的物资选择表格的左侧树
         },
       });
     },
+    // 点击删除行按钮在某一下标下添加一行
     * removeListItemAtIndex({ payload }, { select, put }) {
-      // 点击删除行按钮在某一下标下添加一行
-      yield put({ type: 'showLoading' });
       const storeListData = yield select(state => state.$2$DetailModule.pageDetail);
       const editableMem = yield select(state => state.$2$DetailModule.editableMem);
       const newPageData = _.cloneDeep(storeListData); // 使用新对象
@@ -341,80 +311,31 @@ export default {
       newEditableMem.splice(payload.index, 1);
       yield put({ type: 'mergeData', payload: { pageDetail: newPageData, editableMem: newEditableMem } });
     },
+    // 保存等操作
     * saveRequisitionDetails({ payload }, { call, put, select }) {
-      // 提交访问后台操作。（审核，保存等）
-      if (payload.displaySavingMessage !== false) {
-        const { pageDetail, norId, goodsId } = yield select(state => state.$2$DetailModule);
-        yield put({ type: 'querySuccess', payload: { checkFlag: true } });
-
-        const newPageDetail = pageDetail.filter(item => item.goodsCode);
-        const cloneListData = _.cloneDeep(newPageDetail);
-
-        if (!cloneListData.length) {
-          message.error('第一行物资编码不能为空');
-          return false;
-        }
-        // 数据规整删减
-        cloneListData.map((item) => {
-          delete item.id;
-          delete item.createTime; // 不需要手动保存创建时间
-          delete item.updateTime;
-          delete item.updateUser;
-          delete item.deleteFlag;
-          return null;
-        });
-
-        // 数据审核
-        const invalidiGoodsCode = _.findIndex(cloneListData, item => !item.goodsCode);
-        if (invalidiGoodsCode >= 0) {
-          message.error(`第${invalidiGoodsCode + 1}行“物品编码”数据无效，请检查！`, 3);
-          return null;
-        }
-
-        // 数据组装
-        const detailsData = {
-          specBomDetailList: _.cloneDeep(cloneListData),
-          id: norId,
-          goodsId,
-        };
-        let saveData = null;
-        yield put({
-          type: 'mergeData',
-          payload: {
-            savingStatus: true,
-            loadingList: true,
-          },
-        });
-        // 根据页面状态 请求不同接口
-        if (payload.status === 'save') {
-          saveData = yield call(addBom, parse(detailsData));
-        } else if (payload.status === 'add') {
-          saveData = yield call(addAndAuditBom, parse(detailsData));
-        } else if (payload.status === 'edit') {
-          saveData = yield call(updateAndAuditBom, parse(detailsData));
-        }
-        if (saveData.data.code === '200' && saveData.data.success === true) {
-          message.success('操作成功！');
-          yield put({
-            type: 'cancelDetailData',
-            payload: {},
-          });
-        } else {
-          message.warning(`操作失败，请参考：${saveData.data.errorInfo}`, 5);
-          yield put({
-            type: 'mergeData',
-            payload: {
-              loadingList: false,
-            },
-          });
-          yield put({
-            type: 'changeSavingStatus',
-            savingStatus: false,
-            tamplateId: {},
-          });
-        }
+      yield put({ type: 'mergeData', payload: { savingStatus: true } });
+      const { pageDetail, norId, goodsId } = yield select(state => state.$2$DetailModule);
+      // 数据组装
+      const detailsData = {
+        specBomDetailList: _.cloneDeep(pageDetail),
+        id: norId,
+        goodsId,
+      };
+      let saveData = null;
+      // 根据页面状态 请求不同接口
+      if (payload.status === 'save') {
+        saveData = yield call(addBom, parse(detailsData));
       }
-      return null;
+      if (saveData.data.code === '200' && saveData.data.success === true) {
+        message.success('操作成功！');
+        yield put({
+          type: 'cancelDetailData',
+          payload: {},
+        });
+      } else {
+        message.warning(`操作失败，请参考：${saveData.data.errorInfo}`);
+        yield put({ type: 'mergeData', payload: { savingStatus: false } });
+      }
     },
   },
   subscriptions: {
@@ -431,46 +352,33 @@ export default {
             // 设置当前页的面包屑路径
             dispatch({
               type: 'merchantApp/changePageRouter',
-              pageRouterName: [{ edit: '内页 - 编辑', view: '内页 - 查看', add: '内页 - 增加' }[pageType]],
+              pageRouterName: [{ edit: '编辑', view: '查看', add: '增加' }[pageType]],
             });
-            // 初始化操作
+            // 初始化信息
+            dispatch({
+              type: 'initValue',
+              payload: {},
+            });
             dispatch({
               type: 'mergeData',
               payload: {
-                detailsInfo: {},
                 pageType,
                 goodsId,
                 norId: id,
-                pageDetail: [
-                  {
-                    id: '',
-                  },
-                ],
               },
             });
-            // 如果是查看或者编辑，请求后台
-            if (pageType === 'edit' || pageType === 'view') {
-              // 获取info信息以及可编辑表格数据
+            dispatch({
+              type: 'editableMem',
+              payload: {},
+            });
+            // 获取info信息以及可编辑表格数据
+            if (pageType !== 'add') {
               dispatch({
                 type: 'findProdSpecBom',
                 payload: {
                   goodsId,
                   id,
                 },
-              });
-            } else {
-              // 如果是新增，则直接初始化
-              dispatch({
-                type: 'querySuccess',
-                payload: {
-                  detailsInfo: [],
-                  pageDetail: [{ id: '' }],
-                  loading: false,
-                },
-              });
-              dispatch({
-                type: 'editableMem',
-                payload: { dataSource: [] },
               });
             }
           }

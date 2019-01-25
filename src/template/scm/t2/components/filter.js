@@ -1,23 +1,18 @@
 import React from 'react';
 import moment from 'moment';
 import { Form, Select, Button, Radio, DatePicker, Input, Row, Col } from 'antd';
+import SelectSearch from '../_components/SelectSearch';
 
-const $1$Filter = ({
-  // model state
-  $2$Module,
-  mergeData,
-  searchAction,
-  routerGo,
-  supplierSearchAction,
-}) => {
+const $1$Filter = ({ $2$Module, mergeData, searchAction, routerGo, clearAction }) => {
   const state = $2$Module;
-  const orgOptions =
-    state.supplierList &&
-    state.supplierList.map(supplier => (
-      <Select.Option value={supplier.id} key={supplier.id}>
-        {supplier.suppName}
-      </Select.Option>
-    ));
+  const filterOption = (input, option) => {
+    const reg = new RegExp(input, 'i');
+    const qs = option.props.queryString;
+    if (qs && reg.test(qs)) {
+      return true;
+    }
+    return false;
+  };
   return (
     <div className="components-search">
       <Form layout="inline">
@@ -26,18 +21,18 @@ const $1$Filter = ({
             <Form.Item label="下拉选择">
               <Select
                 style={{ minWidth: 215 }}
-                value={state.supplierId}
-                filterOption={false}
+                value={state.supplyId}
+                filterOption={filterOption}
                 showSearch
                 onSearch={(value) => {
-                  supplierSearchAction(value);
+                  mergeData({ supplyString: value });
                 }}
                 onChange={(value) => {
-                  mergeData({ supplierId: value });
+                  mergeData({ supplyId: value, supplyString: '' });
                   searchAction();
                 }}
               >
-                {orgOptions}
+                {state.supplyList && SelectSearch(state.supplyList, state.supplyString)}
               </Select>
             </Form.Item>
           </Col>
@@ -98,11 +93,12 @@ const $1$Filter = ({
               <Button type="primary" onClick={() => searchAction()}>
                 搜索
               </Button>
+              <Button onClick={() => clearAction()}>清除条件</Button>
             </Form.Item>
           </Col>
         </Row>
       </Form>
-      <div className="float-top">
+      <div>
         <Button
           onClick={() => {
             routerGo('/stock/$2$/detail/add/0/0');
