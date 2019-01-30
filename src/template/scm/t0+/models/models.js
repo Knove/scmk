@@ -36,27 +36,27 @@ export default {
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
       const { pagination } = yield select(state => state.$2$Module);
-      payload.page = payload.pageNo || pagination.current;
-      payload.rows = payload.pageSize || pagination.pageSize;
-      const listData = yield call(fetchList, parse(payload));
-      if (listData.data && listData.data.success) {
+      const params = {
+        page: pagination.current,
+        rows: pagination.pageSize,
+      };
+      const data = yield call(fetchList, parse(params));
+      if (data.data && data.data.success) {
+        const listData = data.data.data;
         yield put({
           type: 'mergeData',
           payload: {
-            listData: listData.data.data.list,
+            listData: listData.list,
             pagination: {
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: listData.data.data.total,
-              current: listData.data.data.pageNum,
-              pageSize: listData.data.data.pageSize,
-              showTotal: total => `共 ${total} 条`,
-              pageSizeOptions: ['10', '20', '50', '100'],
+              ...pagination,
+              total: listData.total,
+              current: listData.pageNum,
+              pageSize: listData.pageSize,
             },
           },
         });
       } else {
-        message.warning(`操作失败，请参考：${listData.data.errorInfo}`);
+        message.warning(`操作失败，请参考：${data.data.errorInfo}`);
       }
       yield put({ type: 'hideLoading' });
     },

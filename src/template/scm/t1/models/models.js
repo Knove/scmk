@@ -67,7 +67,7 @@ export default {
           },
         });
       } else {
-        message.warning(`操作失败，请参考：${listData.data.errorInfo}`);
+        message.warning(`操作失败，请参考：${data.data.errorInfo}`);
       }
       yield put({ type: 'hideLoading' });
     },

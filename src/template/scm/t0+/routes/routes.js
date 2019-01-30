@@ -19,18 +19,21 @@ const $1$ = ({ $2$Module, dispatch }) => {
       });
     },
     clearAction() {
+      const { pagination } = $2$Module;
       dispatch({
         type: '$2$Module/mergeData',
         payload: {
           inputValue: '', // 输入框数据
+          pagination: {
+            ...pagination,
+            current: 1,
+            pageSize: 10,
+          },
         },
       });
       dispatch({
         type: '$2$Module/getList',
-        payload: {
-          pageNo: 1,
-          pageSize: 10,
-        },
+        payload: {},
       });
     },
   };
@@ -45,13 +48,21 @@ const $1$ = ({ $2$Module, dispatch }) => {
         },
       });
     },
-    onPageChange(page) {
+    oonPageChange(page) {
+      const { pagination } = $2$Module;
+      dispatch({
+        type: '$2$Module/mergeData',
+        payload: {
+          pagination: {
+            ...pagination,
+            current: page.current,
+            pageSize: page.pageSize,
+          },
+        },
+      });
       dispatch({
         type: '$2$Module/getList',
-        payload: {
-          pageNo: page.current,
-          pageSize: page.pageSize,
-        },
+        payload: {},
       });
     },
   };
