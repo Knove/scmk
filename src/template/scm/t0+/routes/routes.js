@@ -48,7 +48,7 @@ const $1$ = ({ $2$Module, dispatch }) => {
         },
       });
     },
-    oonPageChange(page) {
+    onPageChange(page) {
       const { pagination } = $2$Module;
       dispatch({
         type: '$2$Module/mergeData',
