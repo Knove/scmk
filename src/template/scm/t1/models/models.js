@@ -43,26 +43,26 @@ export default {
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
       const { supplyId, pagination, datePicker, status } = yield select(state => state.$2$Module);
-      payload.suppId = supplyId;
-      payload.page = payload.pageNo || pagination.current;
-      payload.rows = payload.pageSize || pagination.pageSize;
-      payload.startDate = moment(datePicker[0]).format('YYYY-MM-DD');
-      payload.endDate = moment(datePicker[1]).format('YYYY-MM-DD');
-      payload.status = status;
-      const listData = yield call(fetchList, parse(payload));
-      if (listData.data && listData.data.success) {
+      const params = {
+        suppId: supplyId,
+        page: pagination.current,
+        rows: pagination.pageSize,
+        startDate: moment(datePicker[0]).format('YYYY-MM-DD'),
+        endDate: moment(datePicker[1]).format('YYYY-MM-DD'),
+        status,
+      };
+      const data = yield call(fetchList, parse(params));
+      if (data.data && data.data.success) {
+        const listData = data.data.data;
         yield put({
           type: 'mergeData',
           payload: {
-            listData: listData.data.data.page.data,
+            listData: listData.list,
             pagination: {
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: listData.data.data.page.totalCount,
-              current: listData.data.data.page.page,
-              showTotal: total => `共 ${total} 条`,
-              pageSize: listData.data.data.page.limit,
-              pageSizeOptions: ['10', '20', '50', '100'],
+              ...pagination,
+              total: listData.total,
+              current: listData.pageNum,
+              pageSize: listData.pageSize,
             },
           },
         });
