@@ -53,16 +53,16 @@ export default {
       };
       const data = yield call(fetchList, parse(params));
       if (data.data && data.data.success) {
-        const listData = data.data.data;
+        const listData = data.data.data.page;
         yield put({
           type: 'mergeData',
           payload: {
-            listData: listData.list,
+            listData: listData.data,
             pagination: {
               ...pagination,
-              total: listData.total,
-              current: listData.pageNum,
-              pageSize: listData.pageSize,
+              total: listData.totalCount,
+              current: listData.page,
+              pageSize: listData.limit,
             },
           },
         });
