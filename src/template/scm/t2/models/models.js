@@ -44,13 +44,15 @@ export default {
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
       const { supplyId, pagination, datePicker, status } = yield select(state => state.$2$Module);
-      payload.suppId = supplyId;
-      payload.page = payload.pageNo || pagination.current;
-      payload.rows = payload.pageSize || pagination.pageSize;
-      payload.startDate = moment(datePicker[0]).format('YYYY-MM-DD');
-      payload.endDate = moment(datePicker[1]).format('YYYY-MM-DD');
-      payload.status = status;
-      const data = yield call(fetchList, parse(payload));
+      const params = {
+        suppId: supplyId,
+        page: pagination.current,
+        rows: pagination.pageSize,
+        startDate: moment(datePicker[0]).format('YYYY-MM-DD'),
+        endDate: moment(datePicker[1]).format('YYYY-MM-DD'),
+        status,
+      };
+      const data = yield call(fetchList, parse(params));
       if (data.data && data.data.success) {
         const listData = data.data.data;
         yield put({
@@ -58,13 +60,10 @@ export default {
           payload: {
             listData: listData.list,
             pagination: {
-              showSizeChanger: true,
-              showQuickJumper: true,
+              ...pagination,
               total: listData.total,
               current: listData.pageNum,
-              showTotal: total => `共 ${total} 条`,
               pageSize: listData.pageSize,
-              pageSizeOptions: ['10', '20', '50', '100'],
             },
           },
         });

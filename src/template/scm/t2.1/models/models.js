@@ -43,9 +43,9 @@ export default {
     // 获取表格数据
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
-      const { supplierId, pagination, datePicker, status } = yield select(state => state.$2$Module);
+      const { supplyId, pagination, datePicker, status } = yield select(state => state.$2$Module);
       const params = {
-        suppId: supplierId,
+        suppId: supplyId,
         page: pagination.current,
         rows: pagination.pageSize,
         startDate: moment(datePicker[0]).format('YYYY-MM-DD'),

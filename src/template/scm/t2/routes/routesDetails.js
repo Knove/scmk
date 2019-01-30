@@ -120,12 +120,14 @@ const $1$Details = ({ $2$DetailModule, dispatch }) => {
     },
     // modal的关闭触发
     onCloseModel: () => {
+      const { popupListPagination } = $2$DetailModule;
       dispatch({
         type: '$2$DetailModule/mergeData',
         payload: {
           cateId: '',
           queryModalString: '',
           popupListPagination: {
+            ...popupListPagination,
             current: 1,
             pageSize: 10,
           },
@@ -140,7 +142,6 @@ const $1$Details = ({ $2$DetailModule, dispatch }) => {
       dispatch({
         type: '$2$DetailModule/getPopListData',
         payload: {
-          cateId: $2$DetailModule.cateId,
           pageNo: page.current,
           pageSize: page.pageSize,
         },
@@ -151,8 +152,6 @@ const $1$Details = ({ $2$DetailModule, dispatch }) => {
       dispatch({
         type: '$2$DetailModule/getPopListData',
         payload: {
-          cateId: $2$DetailModule.cateId,
-          pageNo: 1,
           pageSize,
         },
       });

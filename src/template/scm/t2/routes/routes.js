@@ -28,6 +28,7 @@ const $1$ = ({ $2$Module, dispatch }) => {
       });
     },
     clearAction() {
+      const { pagination } = $2$Module;
       dispatch({
         type: '$2$Module/mergeData',
         payload: {
@@ -36,14 +37,16 @@ const $1$ = ({ $2$Module, dispatch }) => {
           status: '', // 状态数据
           datePicker: [moment().subtract(1, 'months'), moment()], // 日期选择框数据
           selectedRowKeys: [], // 表格多选的数据集合
+          pagination: {
+            ...pagination,
+            current: 1,
+            pageSize: 10,
+          },
         },
       });
       dispatch({
         type: '$2$Module/getList',
-        payload: {
-          pageNo: 1,
-          pageSize: 10,
-        },
+        payload: {},
       });
     },
   };
@@ -65,12 +68,20 @@ const $1$ = ({ $2$Module, dispatch }) => {
       });
     },
     onPageChange(page) {
+      const { pagination } = $2$Module;
+      dispatch({
+        type: '$2$Module/mergeData',
+        payload: {
+          pagination: {
+            ...pagination,
+            current: page.current,
+            pageSize: page.pageSize,
+          },
+        },
+      });
       dispatch({
         type: '$2$Module/getList',
-        payload: {
-          pageNo: page.current,
-          pageSize: page.pageSize,
-        },
+        payload: {},
       });
     },
   };
