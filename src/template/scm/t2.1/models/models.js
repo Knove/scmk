@@ -8,17 +8,17 @@ import { fetchList } from '../../services/inventory/$2$';
 export default {
   namespace: '$2$Module',
   state: {
-    text: 'Hello, Scmk ! :D', // Hello, Scmk !
     loading: false, // 加载状态
     listData: [], // 表格数据
-    supplierId: '', // 下拉选中的数据
-    supplierList: '', // 下拉框List数据
+    supplyId: '', // 下拉选中的数据
+    supplyString: '', // 输入的数据
+    supplyList: '', // 下拉框List数据
     inputValue: '', // 输入框数据
     status: '', // 状态数据
-    datePicker: [moment('2017-08-04'), moment('2018-08-04')], // 日期选择框数据
+    datePicker: [moment().subtract(1, 'months'), moment()], // 日期选择框数据
     selectedRowKeys: [], // 表格多选的数据集合
-    // 分页
     pagination: {
+      // 分页
       showSizeChanger: true,
       showQuickJumper: true,
       showTotal: total => `共 ${total} 条`,
@@ -29,7 +29,6 @@ export default {
     },
   },
   reducers: {
-    // Update state.
     mergeData(state, action) {
       return { ...state, ...action.payload };
     },
@@ -41,43 +40,43 @@ export default {
     },
   },
   effects: {
-    // get list data from server
+    // 获取表格数据
     * getList({ payload }, { call, put, select }) {
       yield put({ type: 'showLoading' });
       const { supplierId, pagination, datePicker, status } = yield select(state => state.$2$Module);
-      payload.suppId = supplierId;
-      payload.page = payload.pageNo || pagination.current;
-      payload.rows = payload.pageSize || pagination.pageSize;
-      payload.startDate = moment(datePicker[0]).format('YYYY-MM-DD');
-      payload.endDate = moment(datePicker[1]).format('YYYY-MM-DD');
-      payload.status = status;
-      const listData = yield call(fetchList, parse(payload));
-      if (listData.data && listData.data.success) {
+      const params = {
+        suppId: supplierId,
+        page: pagination.current,
+        rows: pagination.pageSize,
+        startDate: moment(datePicker[0]).format('YYYY-MM-DD'),
+        endDate: moment(datePicker[1]).format('YYYY-MM-DD'),
+        status,
+      };
+      const data = yield call(fetchList, parse(params));
+      if (data.data && data.data.success) {
+        const listData = data.data.data;
         yield put({
           type: 'mergeData',
           payload: {
-            listData: listData.data.data.list,
+            listData: listData.list,
             pagination: {
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: listData.data.data.total,
-              current: listData.data.data.pageNum,
-              showTotal: total => `共 ${total} 条`,
-              pageSizeOptions: ['10', '20', '50', '100'],
+              ...pagination,
+              total: listData.total,
+              current: listData.pageNum,
+              pageSize: listData.pageSize,
             },
           },
         });
       } else {
-        message.warning(`操作失败，请参考：${listData.data.errorInfo}`);
+        message.warning(`操作失败，请参考：${data.data.errorInfo}`);
       }
       yield put({ type: 'hideLoading' });
     },
     // 获取下拉框中的数据
     * querySupplier({ payload }, { call, put }) {
-      yield put({ type: 'showLoading' });
-      const supplierData = yield call(querySupplier, parse(payload));
-      if (supplierData.data && supplierData.data.success) {
-        const dataList = supplierData.data.data.page.data;
+      const data = yield call(querySupplier, parse(payload));
+      if (data.data && data.data.success) {
+        const dataList = data.data.data.page.data;
         let currStoreId = '';
         if (dataList.length > 1) {
           dataList.unshift({ suppName: '请选择', id: '' });
@@ -86,21 +85,23 @@ export default {
           yield put({
             type: 'getList',
             payload: {
-              supplierId: currStoreId,
+              supplyId: currStoreId,
             },
           });
         }
         yield put({
           type: 'mergeData',
           payload: {
-            supplierId: currStoreId,
-            supplierList: dataList,
+            supplyId: currStoreId,
+            supplyList: dataList.map(item => ({
+              id: item.id,
+              name: item.suppName,
+            })),
           },
         });
       } else {
-        message.warning(`操作失败，请参考：${supplierData.data.errorInfo}`);
+        message.warning(`操作失败，请参考：${data.data.errorInfo}`);
       }
-      yield put({ type: 'hideLoading' });
     },
     // 跳转控制
     * routerGo({ payload }, { put }) {
@@ -120,7 +121,7 @@ export default {
           // 初始化请求表格
           dispatch({
             type: 'getList',
-            payload: { page: 1, rows: 10 },
+            payload: {},
           });
           // 初始化请求下拉框内容
           dispatch({

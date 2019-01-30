@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import moment from 'moment';
 import $1$Filter from '../../components/Inventory/$1$/filter';
 import $1$Table from '../../components/Inventory/$1$/table';
 
@@ -18,20 +19,34 @@ const $1$ = ({ $2$Module, dispatch }) => {
         payload: {},
       });
     },
-    supplierSearchAction(value) {
-      dispatch({
-        type: '$2$Module/querySupplier',
-        payload: {
-          queryString: value,
-        },
-      });
-    },
     routerGo(path) {
       dispatch({
         type: '$2$Module/routerGo',
         payload: {
           path,
         },
+      });
+    },
+    clearAction() {
+      const { pagination } = $2$Module;
+      dispatch({
+        type: '$2$Module/mergeData',
+        payload: {
+          supplyId: '', // 下拉选中的数据
+          inputValue: '', // 输入框数据
+          status: '', // 状态数据
+          datePicker: [moment().subtract(1, 'months'), moment()], // 日期选择框数据
+          selectedRowKeys: [], // 表格多选的数据集合
+          pagination: {
+            ...pagination,
+            current: 1,
+            pageSize: 10,
+          },
+        },
+      });
+      dispatch({
+        type: '$2$Module/getList',
+        payload: {},
       });
     },
   };
@@ -53,12 +68,20 @@ const $1$ = ({ $2$Module, dispatch }) => {
       });
     },
     onPageChange(page) {
+      const { pagination } = $2$Module;
+      dispatch({
+        type: '$2$Module/mergeData',
+        payload: {
+          pagination: {
+            ...pagination,
+            current: page.current,
+            pageSize: page.pageSize,
+          },
+        },
+      });
       dispatch({
         type: '$2$Module/getList',
-        payload: {
-          pageNo: page.current,
-          pageSize: page.pageSize,
-        },
+        payload: {},
       });
     },
   };
