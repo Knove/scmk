@@ -96,7 +96,7 @@ export default {
         page: pageNo,
         rows: pageSize,
         queryString: queryModalString,
-        cateId,
+        cateId: cateId === 'default' ? '' : cateId,
       };
       const goodsData = yield call(findGoodsForPage, parse(reqParams));
       if (goodsData.data && goodsData.data.success) {
