@@ -60,7 +60,7 @@ const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRo
                 originalProps: {
                   style: { width: 80 },
                   min: 0,
-                  onPressEnter: () => toNextMem(index, 'consTranRates', !record.consTranRates), // 跳转到下一个编辑状态
+                  // onPressEnter: () => toNextMem(index, 'consTranRates', !record.consTranRates), // 跳转到下一个编辑状态
                 },
               }),
           },
@@ -112,8 +112,8 @@ const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRo
     const editable = '';
     const status = false;
     const currEditStatus = data.editableMem[index] || [];
-    const listDataRenderError = _.cloneDeep(listData);
-    const lineItem = listDataRenderError[index]; // 获取这一行数据
+    // const listDataRenderError = _.cloneDeep(listData);
+    // const lineItem = listDataRenderError[index]; // 获取这一行数据
     const fields = currEditStatus && Object.keys(currEditStatus);
     let newdataSourceIndex = 1;
     newdataSourceIndex = data.dataSourceIndex && data.dataSourceIndex.length ? data.dataSourceIndex.length : newdataSourceIndex;
@@ -133,7 +133,8 @@ const $1$DetailsList = ({ $2$DetailModule, mergeData, cancelDetailPage, removeRo
         inEditStatus={currEditStatus}
         field={field}
         inValue={text}
-        validation={lineItem}
+        // validation={lineItem}
+        insertNewList={value => insertNewRowAfterIndex(value)}
         onChange={value => this.handleChange(field, index, value)}
         status={status}
         editableMem={data.editableMem}

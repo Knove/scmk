@@ -142,7 +142,7 @@ const $1$DetailsList = ({
                 transValue: record.consGrossWeight,
                 originalProps: {
                   min: 0,
-                  onPressEnter: () => toNextMem(index, 'consTranRates'), // 跳转到下一个编辑状态
+                  // onPressEnter: () => toNextMem(index, 'consTranRates'), // 跳转到下一个编辑状态
                 },
               }),
           },
@@ -198,8 +198,8 @@ const $1$DetailsList = ({
     const editable = '';
     const status = false;
     const currEditStatus = data.editableMem[index] || [];
-    const listDataRenderError = _.cloneDeep(listData);
-    const lineItem = listDataRenderError[index]; // 获取这一行数据
+    // const listDataRenderError = _.cloneDeep(listData);
+    // const lineItem = listDataRenderError[index]; // 获取这一行数据
     const fields = currEditStatus && Object.keys(currEditStatus);
     let newdataSourceIndex = 1;
     newdataSourceIndex = data.dataSourceIndex && data.dataSourceIndex.length ? data.dataSourceIndex.length : newdataSourceIndex;
@@ -219,7 +219,8 @@ const $1$DetailsList = ({
         inEditStatus={currEditStatus}
         field={field}
         inValue={text}
-        validation={lineItem}
+        // validation={lineItem}
+        insertNewList={value => insertNewRowAfterIndex(value)}
         onChange={value => this.handleChange(field, index, value)}
         status={status}
         openModel={openModel}

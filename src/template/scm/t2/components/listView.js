@@ -131,7 +131,7 @@ const $1$DetailsList = ({
               renderColumns(text, record, index, 'goodsCode', {
                 rowIdent: record.id,
                 type: 'select',
-                onKeyEnter: () => toNextMem(index, 'goodsCode'),
+                // onKeyEnter: () => toNextMem(index, 'goodsCode'),
                 onChange: showGoodsListByTyping, // 手动输入的回调
                 selectItem: (itemValue, itemId) => {
                   toNextMem(index, 'goodsCode');
@@ -192,7 +192,7 @@ const $1$DetailsList = ({
                 originalProps: {
                   style: { width: 50 },
                   min: 0,
-                  onPressEnter: () => toNextMem(index, 'consTranRates'), // 跳转到下一个编辑状态
+                  // onPressEnter: () => toNextMem(index, 'consTranRates'), // 跳转到下一个编辑状态
                 },
               }),
           },
@@ -260,8 +260,8 @@ const $1$DetailsList = ({
     const editable = '';
     const status = false;
     const currEditStatus = data.editableMem[index] || [];
-    const listDataRenderError = _.cloneDeep(listData);
-    const lineItem = listDataRenderError[index]; // 获取这一行数据
+    // const listDataRenderError = _.cloneDeep(listData);
+    // const lineItem = listDataRenderError[index]; // 获取这一行数据
     const fields = currEditStatus && Object.keys(currEditStatus);
     let newdataSourceIndex = 1;
     newdataSourceIndex = data.dataSourceIndex && data.dataSourceIndex.length ? data.dataSourceIndex.length : newdataSourceIndex;
@@ -281,7 +281,8 @@ const $1$DetailsList = ({
         inEditStatus={currEditStatus}
         field={field}
         inValue={text}
-        validation={lineItem}
+        // validation={lineItem}
+        insertNewList={value => insertNewRowAfterIndex(value)}
         onChange={value => this.handleChange(field, index, value)}
         status={status}
         openModel={openModel}
