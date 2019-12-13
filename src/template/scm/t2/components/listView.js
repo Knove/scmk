@@ -1,7 +1,7 @@
-import React from 'react';
-import _ from 'lodash';
-import { Table, Icon, Button, Tooltip, Popconfirm, Affix } from 'antd';
-import EditableCell from '../../_components/EditableCell2';
+import React from "react";
+import _ from "lodash";
+import { Table, Icon, Button, Tooltip, Popconfirm, Affix } from "antd";
+import EditableCell from "../../_components/EditableCell2";
 
 const $1$DetailsList = ({
   $2$DetailModule,
@@ -26,7 +26,7 @@ const $1$DetailsList = ({
   insertNewRowAfterIndex, // 添加一行
   removeRowAtIndex, // 删除一行
   cancelDetailPage, // 点击返回
-  mergeData,
+  mergeData
 }) => {
   const data = $2$DetailModule;
   const listData = data.pageDetail; // 可编辑表格内的内容
@@ -34,118 +34,118 @@ const $1$DetailsList = ({
   // 弹出物资选择框的表格列
   const onPopColumns = [
     {
-      title: '物品编码',
-      dataIndex: 'goodsCode',
-      key: 'goodsCode',
+      title: "物品编码",
+      dataIndex: "goodsCode",
+      key: "goodsCode"
     },
     {
-      title: '物品名称',
-      dataIndex: 'goodsName',
-      key: 'goodsName',
+      title: "物品名称",
+      dataIndex: "goodsName",
+      key: "goodsName"
     },
     {
-      title: '规格',
-      dataIndex: 'goodsSpec',
-      key: 'goodsSpec',
+      title: "规格",
+      dataIndex: "goodsSpec",
+      key: "goodsSpec"
     },
     {
-      title: '标准单位',
-      dataIndex: 'unitName',
-      key: 'unitName',
+      title: "标准单位",
+      dataIndex: "unitName",
+      key: "unitName"
     },
     {
-      title: '辅助单位',
-      dataIndex: 'dualUnitName',
-      key: 'dualUnitName',
+      title: "辅助单位",
+      dataIndex: "dualUnitName",
+      key: "dualUnitName"
     },
     {
-      title: '消耗单位',
-      dataIndex: 'consUnitName',
-      key: 'consUnitName',
-    },
+      title: "消耗单位",
+      dataIndex: "consUnitName",
+      key: "consUnitName"
+    }
   ];
-  if (data.pageType === 'view') {
+  if (data.pageType === "view") {
     columnsConfig = [
       {
-        title: '',
-        dataIndex: 'index',
-        key: 'index',
+        title: "",
+        dataIndex: "index",
+        key: "index",
         width: 40,
-        render: (text, record, index) => parseInt(index, 10) + 1,
+        render: (text, record, index) => parseInt(index, 10) + 1
       },
       {
-        title: '加工品',
+        title: "加工品",
         children: [
           {
-            title: '编码',
-            dataIndex: 'goodsCode',
-            key: 'goodsCode',
+            title: "编码",
+            dataIndex: "goodsCode",
+            key: "goodsCode"
           },
           {
-            title: '名称',
-            dataIndex: 'goodsName',
-            key: 'goodsName',
+            title: "名称",
+            dataIndex: "goodsName",
+            key: "goodsName"
           },
           {
-            title: '规格',
-            dataIndex: 'goodsSpec',
-            key: 'goodsSpec',
-          },
-        ],
+            title: "规格",
+            dataIndex: "goodsSpec",
+            key: "goodsSpec"
+          }
+        ]
       },
       {
-        title: '标准',
+        title: "标准",
         children: [
           {
-            title: '毛重',
-            dataIndex: 'consGrossWeight',
-            key: 'consGrossWeight',
+            title: "毛重",
+            dataIndex: "consGrossWeight",
+            key: "consGrossWeight"
           },
           {
-            title: '单位',
-            dataIndex: 'unitName',
-            key: 'unitName',
-          },
-        ],
-      },
+            title: "单位",
+            dataIndex: "unitName",
+            key: "unitName"
+          }
+        ]
+      }
     ];
-  } else if (data.pageType === 'add' || data.pageType === 'edit') {
+  } else if (data.pageType === "add" || data.pageType === "edit") {
     columnsConfig = [
       {
-        title: '',
-        dataIndex: 'index',
-        key: 'index',
+        title: "",
+        dataIndex: "index",
+        key: "index",
         width: 40,
-        render: (text, record, index) => parseInt(index, 10) + 1,
+        render: (text, record, index) => parseInt(index, 10) + 1
       },
       {
-        title: '物品',
+        title: "物品",
         children: [
           {
-            title: '编码',
-            dataIndex: 'goodsCode',
-            key: 'goodsCode',
-            width: '143',
-            className: 'editable-col',
+            title: "编码",
+            dataIndex: "goodsCode",
+            key: "goodsCode",
+            width: "143",
+            className: "editable-col",
             render: (text, record, index) =>
-              renderColumns(text, record, index, 'goodsCode', {
+              renderColumns(text, record, index, "goodsCode", {
                 rowIdent: record.id,
-                type: 'select',
+                type: "select",
                 // onKeyEnter: () => toNextMem(index, 'goodsCode'),
                 onChange: showGoodsListByTyping, // 手动输入的回调
                 selectItem: (itemValue, itemId) => {
-                  toNextMem(index, 'goodsCode');
-                  selectedAGoods(itemValue, itemId, index, 'goodsCode');
+                  toNextMem(index, "goodsCode");
+                  selectedAGoods(itemValue, itemId, index, "goodsCode");
                 }, // 选择手动输入后列表的一个项目
                 keyValues: data.goodsList, // 显示响应手动输入的列表数据
                 disabledList: (() => listData.map(item => item.goodsCode))(), // 指定下拉列表中和弹窗列表中已显示的不让其可选，匹配ID
                 getPopListData: getGoodsListdata, // 获取弹窗的物资列表
                 popListData: data.goodsPopListModel, // getPopListData 获取的 table 里的数据
                 onPopColumns, // 弹窗列表表头
-                cbReceiveChoose: (datas) => {
+                cbReceiveChoose: datas => {
                   // 选择的几条数据
                   const selectedList = _.cloneDeep(datas);
-                  selectedListGoods(selectedList, index, 'goodsCode', true); // 最后一个参数判断是否是弹窗添加
+                  selectedListGoods(selectedList, index, "goodsCode", true); // 最后一个参数判断是否是弹窗添加
                 },
                 foundTreeList: data.foundTreeList, // tree 数据
                 onSelectTreeItem: value => onSelectedTreeItem(value), // 选择tree的类别节点
@@ -158,67 +158,72 @@ const $1$DetailsList = ({
                 onPopPageSizeChange: onPopupPageSizeChange, // 修改页尺寸
                 originalProps: {
                   // onFocusInput: () => toggleMemStatus(index, 'goodsCode'), // 修改其他的编辑状态为非编辑状态
-                },
-              }),
+                }
+              })
           },
           {
-            title: '名称',
-            dataIndex: 'goodsName',
-            key: 'goodsName',
+            title: "名称",
+            dataIndex: "goodsName",
+            key: "goodsName"
           },
           {
-            title: '规格',
-            dataIndex: 'goodsSpec',
-            key: 'goodsSpec',
-          },
-        ],
+            title: "规格",
+            dataIndex: "goodsSpec",
+            key: "goodsSpec"
+          }
+        ]
       },
       {
-        title: '标准',
+        title: "标准",
         children: [
           {
-            title: '毛重',
-            dataIndex: 'consGrossWeight',
-            key: 'consGrossWeight',
-            width: '90',
-            className: 'editable-col',
+            title: "毛重",
+            dataIndex: "consGrossWeight",
+            key: "consGrossWeight",
+            width: "90",
+            className: "editable-col",
             render: (text, record, index) =>
-              renderColumns(text, record, index, 'consGrossWeight', {
-                type: 'number',
+              renderColumns(text, record, index, "consGrossWeight", {
+                type: "number",
                 rowIdent: record.id,
-                disabled: data.pageType === 'edit' && record.status === '0',
-                updateValue: (value, itemKey) => refreshList(value, itemKey, 'consGrossWeight', index),
+                disabled: data.pageType === "edit" && record.status === "0",
+                updateValue: (value, itemKey) =>
+                  refreshList(value, itemKey, "consGrossWeight", index),
                 transValue: record.consGrossWeight,
                 originalProps: {
                   style: { width: 50 },
-                  min: 0,
+                  min: 0
                   // onPressEnter: () => toNextMem(index, 'consTranRates'), // 跳转到下一个编辑状态
-                },
-              }),
+                }
+              })
           },
           {
-            title: '单位',
-            dataIndex: 'unitName',
-            key: 'unitName',
-          },
-        ],
+            title: "单位",
+            dataIndex: "unitName",
+            key: "unitName"
+          }
+        ]
       },
       {
-        title: '操作',
-        dataIndex: 'options',
-        key: 'options',
-        fixed: 'right',
+        title: "操作",
+        dataIndex: "options",
+        key: "options",
+        fixed: "right",
         width: 70,
         render: (text, record, index) => (
           <div>
             <Tooltip placement="top" title="添加一行">
-              <Icon type="plus" style={{ fontSize: 20, color: '#08c', cursor: 'pointer' }} onClick={() => insertNewRowAfterIndex(index)} />
+              <Icon
+                type="plus"
+                style={{ fontSize: 20, color: "#08c", cursor: "pointer" }}
+                onClick={() => insertNewRowAfterIndex(index)}
+              />
             </Tooltip>
             {listData.length > 1 ? (
               <Popconfirm
                 title={
                   <div>
-                    <span style={{ color: '#f04134' }}>危险操作！</span>
+                    <span style={{ color: "#f04134" }}>危险操作！</span>
                     <br />
                     <span>删除后可能无法恢复，确定继续删除吗？</span>
                   </div>
@@ -226,12 +231,15 @@ const $1$DetailsList = ({
                 okText="确认删除"
                 onConfirm={() => removeRowAtIndex(index)}
               >
-                <Icon type="minus" style={{ fontSize: 20, color: 'red', cursor: 'pointer' }} />
+                <Icon
+                  type="minus"
+                  style={{ fontSize: 20, color: "red", cursor: "pointer" }}
+                />
               </Popconfirm>
             ) : null}
           </div>
-        ),
-      },
+        )
+      }
     ];
   }
   // 更新数据
@@ -240,12 +248,15 @@ const $1$DetailsList = ({
     rowItem[fieldName] = value;
   };
   // 打开加工品弹窗
-  openModel = (value) => {
+  openModel = value => {
     openGoodsModel(value);
   };
   // 选择手动输入后列表的一个项目
   selectedAGoods = (itemValue, itemId, index, fieldName) => {
-    const selectedItem = _.find(data.goodsList, item => item.goodsCode === itemValue);
+    const selectedItem = _.find(
+      data.goodsList,
+      item => item.goodsCode === itemValue
+    );
     syncSeletedItemIntoRow([selectedItem], index, fieldName);
   };
   // 弹窗选择的几条数据
@@ -253,26 +264,33 @@ const $1$DetailsList = ({
     syncSeletedItemIntoRow(selectedList, index, fieldName, isModal);
   };
   // 手动输入的回调
-  showGoodsListByTyping = (value) => {
+  showGoodsListByTyping = value => {
     getGoodsListByTyping(value);
   };
   renderColumns = (text, record, index, field, configurations) => {
-    const editable = '';
+    const editable = "";
     const status = false;
     const currEditStatus = data.editableMem[index] || [];
     // const listDataRenderError = _.cloneDeep(listData);
     // const lineItem = listDataRenderError[index]; // 获取这一行数据
     const fields = currEditStatus && Object.keys(currEditStatus);
     let newdataSourceIndex = 1;
-    newdataSourceIndex = data.dataSourceIndex && data.dataSourceIndex.length ? data.dataSourceIndex.length : newdataSourceIndex;
+    newdataSourceIndex =
+      data.dataSourceIndex && data.dataSourceIndex.length
+        ? data.dataSourceIndex.length
+        : newdataSourceIndex;
     if (!_.has(data.editableMem[index], field)) {
-      if (index === data.editableMem.length - 1 && (field === fields[0] || fields.length === 0) && data.editableMem.length !== newdataSourceIndex) {
+      if (
+        index === data.editableMem.length - 1 &&
+        (field === fields[0] || fields.length === 0) &&
+        data.editableMem.length !== newdataSourceIndex
+      ) {
         currEditStatus[field] = true;
       } else {
         currEditStatus[field] = false; // 默认不在编辑状态
       }
     }
-    if (typeof editable === 'undefined') {
+    if (typeof editable === "undefined") {
       return text;
     }
     return (
@@ -307,17 +325,23 @@ const $1$DetailsList = ({
         pagination={false}
         onRowClick={onUpdateAdd}
         rowKey={record => record.id}
-        rowClassName={() => 'editable-row'}
+        rowClassName={() => "editable-row"}
       />
       <Affix offsetBottom={0} className="detail-page-actions">
-        {data.pageType !== 'view' && (
-          <Button type="primary" onClick={() => saveDetails('save')} disabled={data.savingStatus}>
-            保存
+        <div>
+          {data.pageType !== "view" && (
+            <Button
+              type="primary"
+              onClick={() => saveDetails("save")}
+              disabled={data.savingStatus}
+            >
+              保存
+            </Button>
+          )}
+          <Button onClick={cancelDetailPage} disabled={data.savingStatus}>
+            返回
           </Button>
-        )}
-        <Button onClick={cancelDetailPage} disabled={data.savingStatus}>
-          返回
-        </Button>
+        </div>
       </Affix>
     </div>
   );
